@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>ru.strict</groupId>
+            <artifactId>domain-primitive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.strict</groupId>
             <artifactId>jfile</artifactId>
         </dependency>
         <dependency>
