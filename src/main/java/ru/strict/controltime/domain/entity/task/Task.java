@@ -1,6 +1,7 @@
 package ru.strict.controltime.domain.entity.task;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
@@ -9,6 +10,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Getter
+@EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class Task {
     TaskId id;
@@ -17,9 +19,6 @@ public class Task {
     Instant startedAt;
     Instant lastProcessedAt;
 
-    /**
-     * @throws ru.strict.exception.CodeableException: {@link TaskError#taskIsNotReadyErrorCode}
-     */
     public void markAsProcessed() {
         if (!isReady()) {
             throw TaskError.errTaskIsNotReady();

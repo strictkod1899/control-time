@@ -1,4 +1,4 @@
-package ru.strict.controltime.domain.entity.task;
+package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
 import ru.strict.domainprimitive.id.EntityIdError;
@@ -11,20 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TaskIdTest {
+class TimeManagerIdTest {
 
     @Test
     void testNewId_NoError() {
-        var taskId1 = TaskId.init();
-        var taskId2 = TaskId.init();
+        var timeManagerId1 = TimeManagerId.init();
+        var timeManagerId2 = TimeManagerId.init();
 
-        assertNotEquals(taskId1, taskId2);
+        assertNotEquals(timeManagerId1, timeManagerId2);
     }
 
     @Test
     void testIdFrom_StringIsNull_ThrowError() {
         try {
-            TaskId.from(null);
+            TimeManagerId.from(null);
         } catch (CodeableException ex) {
             assertTrue(CodeableException.equalsByCode(ex, EntityIdError.idIsEmptyErrorCode));
             return;
@@ -36,7 +36,7 @@ class TaskIdTest {
     @Test
     void testIdFrom_EmptyString_ThrowError() {
         try {
-            TaskId.from("");
+            TimeManagerId.from("");
         } catch (CodeableException ex) {
             assertTrue(CodeableException.equalsByCode(ex, EntityIdError.idIsEmptyErrorCode));
             return;
@@ -48,7 +48,7 @@ class TaskIdTest {
     @Test
     void testIdFrom_NotUUID_ThrowError() {
         try {
-            TaskId.from("123");
+            TimeManagerId.from("123");
         } catch (CodeableException ex) {
             assertTrue(CodeableException.equalsByCode(ex, EntityIdError.invalidIdFormatErrorCode));
             return;
@@ -61,10 +61,10 @@ class TaskIdTest {
     void testIdFrom_ValidParam_NoError() {
         var expectedIdStr = UUID.randomUUID().toString();
 
-        var taskId1 = TaskId.from(expectedIdStr);
-        var taskId2 = TaskId.from(expectedIdStr);
+        var timeManagerId1 = TimeManagerId.from(expectedIdStr);
+        var timeManagerId2 = TimeManagerId.from(expectedIdStr);
 
-        assertEquals(taskId1, taskId2);
-        assertEquals(taskId1.toString(), taskId2.toString());
+        assertEquals(timeManagerId1, timeManagerId2);
+        assertEquals(timeManagerId1.toString(), timeManagerId2.toString());
     }
 }

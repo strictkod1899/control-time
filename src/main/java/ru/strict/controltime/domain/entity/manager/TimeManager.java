@@ -1,36 +1,81 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.domain.entity.task.Message;
 import ru.strict.controltime.domain.entity.task.Task;
+import ru.strict.controltime.domain.entity.task.TaskBuilder;
 import ru.strict.controltime.domain.entity.task.TaskId;
+import ru.strict.controltime.domain.entity.task.Tasks;
 
-import java.time.Instant;
+import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeManager {
-    Map<String, Task> tasks;
+    TimeManagerId id;
+    Tasks tasks;
 
-    public static TimeManager newInst(Instant startedAt) {
-        throw new UnsupportedOperationException("implement me");
+    public static TimeManager init() {
+        return new TimeManager();
     }
 
-    public void addTask(Task task) {
-        throw new UnsupportedOperationException("implement me");
+    public static TimeManager from(TimeManagerId id, List<Task> tasksList) {
+        if (id == null) {
+            throw TimeManagerError.errTimeManagerId();
+        }
+
+        var tasks = Tasks.from(tasksList);
+
+        return new TimeManager(id, tasks);
+    }
+
+    private TimeManager() {
+        this.id = TimeManagerId.init();
+        this.tasks = Tasks.init();
+    }
+
+    private TimeManager(TimeManagerId id, Tasks tasks) {
+        this.id = id;
+        this.tasks = tasks;
+    }
+
+    public void addTask(Message message, Duration sleepDuration) {
+        var task = new TaskBuilder().
+                id(TaskId.init()).
+                message(message).
+                sleepDuration(sleepDuration).
+                build();
+
+        this.tasks.addTask(task);
     }
 
     public List<TaskId> getReadyTaskIds() {
-        throw new UnsupportedOperationException("implement me");
+        return tasks.toCollection().stream().
+                filter(Task::isReady).
+                map(Task::getId).
+                collect(Collectors.toList());
     }
 
-    public Message getTaskMessage(TaskId taskId) {
-        throw new UnsupportedOperationException("implement me");
+    public Optional<Message> getTaskMessage(TaskId taskId) {
+        return this.tasks.getTaskById(taskId).
+                map(Task::getMessage);
     }
 
-    public Message markTaskAsProcessed(TaskId taskId) {
-        throw new UnsupportedOperationException("implement me");
+    public void markTaskAsProcessed(TaskId taskId) {
+        var taskOptional = this.tasks.getTaskById(taskId);
+
+        var task = taskOptional.orElseThrow(() -> TimeManagerError.errTaskNotFound(taskId));
+
+        task.markAsProcessed();
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks.toCollection();
     }
 }

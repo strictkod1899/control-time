@@ -16,7 +16,7 @@ class MarkAsProcessedTest {
         try {
             task.markAsProcessed();
         } catch (CodeableException ex) {
-            ex.equalsByCode(TaskError.taskIsNotReadyErrorCode);
+            assertTrue(ex.equalsByCode(TaskError.taskIsNotReadyErrorCode));
 
             assertFalse(task.getLastProcessedAt().isPresent());
             return;
@@ -42,7 +42,7 @@ class MarkAsProcessedTest {
         try {
             task.markAsProcessed();
         } catch (CodeableException ex) {
-            ex.equalsByCode(TaskError.taskIsNotReadyErrorCode);
+            assertTrue(ex.equalsByCode(TaskError.taskIsNotReadyErrorCode));
 
             assertEquals(originalLastProcessedAt, task.getLastProcessedAt().orElseThrow());
             return;

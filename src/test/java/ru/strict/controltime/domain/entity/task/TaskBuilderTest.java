@@ -32,7 +32,7 @@ class TaskBuilderTest {
 
     @Test
     void testBuild_RequiredParams_ReturnTask() {
-        var expectedTaskId = TaskStub.getTaskId();
+        var expectedTaskId = TaskStub.getId();
         var expectedMessage = TaskStub.getMessage();
         var expectedSleepDuration = Duration.ofMinutes(30);
 
@@ -53,7 +53,7 @@ class TaskBuilderTest {
 
     @Test
     void testBuild_AllValidParams_ReturnTask() {
-        var expectedTaskId = TaskStub.getTaskId();
+        var expectedTaskId = TaskStub.getId();
         var expectedMessage = TaskStub.getMessage();
         var expectedSleepDuration = Duration.ofMinutes(30);
         var expectedStartedAt = Instant.ofEpochMilli(1676045473477L);

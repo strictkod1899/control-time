@@ -46,11 +46,12 @@ public class TaskBuilder {
         return this;
     }
 
-    /**
-     * @throws ru.strict.exception.Errors.ErrorsException
-     */
     public Task build() {
         this.checkRequiredFields();
+        if (errors.isPresent()) {
+            throw errors.toException();
+        }
+
         this.fillDefaultFields();
 
         return createFromBuilder();
@@ -68,12 +69,7 @@ public class TaskBuilder {
         if (this.sleepDuration == null) {
             this.errors.addError(TaskError.errSleepDurationIsRequired());
         }
-
-        if (errors.isPresent()) {
-            throw errors.toException();
-        }
     }
-
 
     private void fillDefaultFields() {
         if (this.startedAt == null) {

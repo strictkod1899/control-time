@@ -5,14 +5,39 @@ import ru.strict.controltime.domain.entity.task.Message;
 import ru.strict.controltime.domain.entity.task.Task;
 import ru.strict.controltime.domain.entity.task.TaskBuilder;
 import ru.strict.controltime.domain.entity.task.TaskId;
+import ru.strict.controltime.domain.entity.task.Tasks;
 import ru.strict.test.RandomUtil;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @UtilityClass
 public class TaskStub {
+
+    public Tasks getFullTasks() {
+        var tasksList = List.of(
+                getBaseTask(),
+                getFullTask(),
+                getReadyBaseTask(),
+                getReadyFullTask()
+        );
+
+        return Tasks.from(tasksList);
+    }
+
+    public Task getFullTaskWithId(TaskId taskId) {
+        return getFullTaskBuilder().
+                id(taskId).
+                build();
+    }
+
+    public Task getBaseTaskWithId(TaskId taskId) {
+        return getBaseTaskBuilder().
+                id(taskId).
+                build();
+    }
 
     public Task getReadyFullTask() {
         var givenDuration = Duration.ofMinutes(20);
@@ -50,7 +75,7 @@ public class TaskStub {
         var givenLastProcessedAt = givenStartedAt.plus(givenDuration.toMinutes(), ChronoUnit.MINUTES);
 
         return new TaskBuilder().
-                id(getTaskId()).
+                id(getId()).
                 message(getMessage()).
                 sleepDuration(givenDuration).
                 startedAt(givenStartedAt).
@@ -59,12 +84,12 @@ public class TaskStub {
 
     public TaskBuilder getBaseTaskBuilder() {
         return new TaskBuilder().
-                id(getTaskId()).
+                id(getId()).
                 message(getMessage()).
                 sleepDuration(Duration.ofMinutes(30));
     }
 
-    public TaskId getTaskId() {
+    public TaskId getId() {
         return TaskId.init();
     }
 
