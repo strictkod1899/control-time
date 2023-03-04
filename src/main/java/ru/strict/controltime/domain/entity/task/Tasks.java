@@ -49,6 +49,18 @@ public class Tasks {
         this.tasksMap.put(task.getId(), task);
     }
 
+    public void deleteTask(TaskId taskId) {
+        if (taskId == null) {
+            throw TaskError.errTaskIdIsRequired();
+        }
+
+        if (!tasksMap.containsKey(taskId)) {
+            throw TaskError.errTaskNotFoundById(taskId);
+        }
+
+        tasksMap.remove(taskId);
+    }
+
     public Optional<Task> getTaskById(TaskId taskId) {
         if (taskId == null) {
             throw TaskError.errTaskIdIsRequired();

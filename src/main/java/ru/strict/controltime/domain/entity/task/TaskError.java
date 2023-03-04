@@ -14,6 +14,7 @@ public class TaskError {
     public final String tasksListIsRequiredErrorCode = "9a0bc086-007";
     public final String doubledTaskErrorCode = "9a0bc086-008";
     public final String taskIsRequiredErrorCode = "9a0bc086-009";
+    public final String taskNotFoundErrorCode = "9a0bc086-010";
 
     public CodeableException errMessageIsEmpty() {
         return new CodeableException(messageIsEmptyErrorCode, "Message is empty");
@@ -44,10 +45,14 @@ public class TaskError {
     }
 
     public CodeableException errDoubledTaskById(TaskId taskId) {
-        return new CodeableException(doubledTaskErrorCode, String.format("Doubled task by id = %s", taskId));
+        return new CodeableException(doubledTaskErrorCode, String.format("Doubled task by id = '%s'", taskId));
     }
 
     public CodeableException errTaskIsRequired() {
         return new CodeableException(taskIsRequiredErrorCode, "Task is required");
+    }
+
+    public CodeableException errTaskNotFoundById(TaskId taskId) {
+        return new CodeableException(taskNotFoundErrorCode, String.format("Task not found by id = '%s'", taskId));
     }
 }

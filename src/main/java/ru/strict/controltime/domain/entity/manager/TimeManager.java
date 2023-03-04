@@ -55,6 +55,10 @@ public class TimeManager {
         this.tasks.addTask(task);
     }
 
+    public void deleteTask(TaskId taskId) {
+        this.tasks.deleteTask(taskId);
+    }
+
     public List<TaskId> getReadyTaskIds() {
         return tasks.toCollection().stream().
                 filter(Task::isReady).
