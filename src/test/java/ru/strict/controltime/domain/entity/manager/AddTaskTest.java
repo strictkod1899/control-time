@@ -1,6 +1,8 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.domain.entity.task.Message;
 import ru.strict.controltime.domain.entity.task.Task;
 import ru.strict.controltime.domain.entity.task.TaskError;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class AddTaskTest {
 
     @Test
@@ -26,7 +29,7 @@ class AddTaskTest {
                 TaskError.sleepDurationIsRequiredErrorCode
         );
 
-        var timeManager = TimeManagerStub.getBaseTimeManager();
+        var timeManager = TimeManagerStub.getEmptyTimeManager();
 
         try {
             timeManager.addTask(null, null);
@@ -40,7 +43,7 @@ class AddTaskTest {
 
     @Test
     void testAddTask_ValidParams_NoError() {
-        var timeManager = TimeManagerStub.getBaseTimeManager();
+        var timeManager = TimeManagerStub.getEmptyTimeManager();
 
         var taskParams1 = new AddTaskParams(){{
             message = TaskStub.getMessage();

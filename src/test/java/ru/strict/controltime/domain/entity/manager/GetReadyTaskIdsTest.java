@@ -1,6 +1,9 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import ru.strict.controltime.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TimeManagerStub;
 
@@ -8,11 +11,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class GetReadyTaskIdsTest {
 
     @Test
     void testGetReadyTaskIds_EmptyTasks_ReturnEmptyList() {
-        var timeManager = TimeManagerStub.getBaseTimeManager();
+        var timeManager = TimeManagerStub.getEmptyTimeManager();
 
         var readyTaskIds = timeManager.getReadyTaskIds();
 
@@ -30,14 +34,14 @@ class GetReadyTaskIdsTest {
 
     @Test
     void testGetReadyTaskIds_WithReadyTasks_ReturnNotEmptyList() {
-        var expectedReadyTask1 = TaskStub.getReadyBaseTask();
-        var expectedReadyTask2 = TaskStub.getReadyFullTask();
-        var expectedReadyTasksIds = List.of(expectedReadyTask1.getId(), expectedReadyTask2.getId());
+        var expectedReadyTask1 = ManageTaskStub.getReadyBaseManageTask();
+        var expectedReadyTask2 = ManageTaskStub.getReadyFullManageTask();
+        var expectedReadyTasksIds = List.of(expectedReadyTask1.getTaskId(), expectedReadyTask2.getTaskId());
 
         var givenTasks = List.of(
-                TaskStub.getBaseTask(),
+                ManageTaskStub.getBaseManageTask(),
                 expectedReadyTask2,
-                TaskStub.getFullTask(),
+                ManageTaskStub.getFullManageTask(),
                 expectedReadyTask1
         );
         var timeManager = TimeManagerStub.getTimeManagerFrom(givenTasks);

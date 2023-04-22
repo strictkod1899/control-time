@@ -5,15 +5,12 @@ import lombok.experimental.FieldDefaults;
 import ru.strict.exception.Errors;
 
 import java.time.Duration;
-import java.time.Instant;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskBuilder {
     TaskId id;
     Message message;
     Duration sleepDuration;
-    Instant startedAt;
-    Instant lastProcessedAt;
 
     Errors errors;
 
@@ -36,23 +33,11 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder startedAt(Instant startedAt) {
-        this.startedAt = startedAt;
-        return this;
-    }
-
-    public TaskBuilder lastProcessedAt(Instant lastProcessedAt) {
-        this.lastProcessedAt = lastProcessedAt;
-        return this;
-    }
-
     public Task build() {
         this.checkRequiredFields();
         if (errors.isPresent()) {
             throw errors.toException();
         }
-
-        this.fillDefaultFields();
 
         return createFromBuilder();
     }
@@ -71,19 +56,11 @@ public class TaskBuilder {
         }
     }
 
-    private void fillDefaultFields() {
-        if (this.startedAt == null) {
-            this.startedAt = Instant.now();
-        }
-    }
-
     private Task createFromBuilder() {
         var task = new Task();
         task.id = this.id;
         task.message = this.message;
         task.sleepDuration = this.sleepDuration;
-        task.startedAt = this.startedAt;
-        task.lastProcessedAt = this.lastProcessedAt;
 
         return task;
     }

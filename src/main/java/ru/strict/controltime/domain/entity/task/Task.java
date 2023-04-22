@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import ru.strict.exception.Errors;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,24 +17,28 @@ public class Task {
     TaskId id;
     Message message;
     Duration sleepDuration;
-    Instant startedAt;
-    Instant lastProcessedAt;
 
-    public void markAsProcessed() {
-        if (!isReady()) {
-            throw TaskError.errTaskIsNotReady();
+    public static Task init(Message message, Duration sleepDuration) {
+        var errors = new Errors();
+        if (message == null) {
+            errors.addError(TaskError.errMessageIsRequired());
         }
-        lastProcessedAt = Instant.now();
+        if (sleepDuration == null) {
+            errors.addError(TaskError.errSleepDurationIsRequired());
+        }
+        if (errors.isPresent()) {
+            throw errors.toException();
+        }
+
+        var task = new Task();
+        task.id = TaskId.init();
+        task.message = message;
+        task.sleepDuration = sleepDuration;
+
+        return task;
     }
 
-    public boolean isReady() {
-        var lastStartedAt = getLastProcessedAt().orElse(startedAt);
-        var requiredEndSleep = lastStartedAt.plus(sleepDuration);
-
-        return requiredEndSleep.isBefore(Instant.now());
-    }
-
-    public Optional<Instant> getLastProcessedAt() {
-        return Optional.ofNullable(lastProcessedAt);
+    public static TaskBuilder builder() {
+        return new TaskBuilder();
     }
 }

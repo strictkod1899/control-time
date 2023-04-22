@@ -1,7 +1,11 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import ru.strict.controltime.domain.entity.managetask.ManageTaskError;
 import ru.strict.controltime.domain.entity.task.TaskError;
+import ru.strict.controltime.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
@@ -11,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class MarkTaskAsProcessedTest {
 
     @Test
@@ -20,7 +25,7 @@ class MarkTaskAsProcessedTest {
         try {
             timeManager.markTaskAsProcessed(null);
         } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskError.taskIdIsRequiredErrorCode));
+            assertTrue(ex.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
             return;
         }
 
@@ -43,18 +48,18 @@ class MarkTaskAsProcessedTest {
 
     @Test
     void testMarkTaskAsProcessed_ValidParams_NoError() {
-        var expectedReadyTask = TaskStub.getReadyBaseTask();
+        var expectedReadyTask = ManageTaskStub.getReadyBaseManageTask();
         var tasksList = List.of(
-                TaskStub.getBaseTask(),
-                TaskStub.getFullTask(),
+                ManageTaskStub.getBaseManageTask(),
+                ManageTaskStub.getFullManageTask(),
                 expectedReadyTask,
-                TaskStub.getReadyFullTask()
+                ManageTaskStub.getReadyFullManageTask()
         );
 
         var timeManager = TimeManagerStub.getTimeManagerFrom(tasksList);
         assertFalse(expectedReadyTask.getLastProcessedAt().isPresent());
 
-        timeManager.markTaskAsProcessed(expectedReadyTask.getId());
+        timeManager.markTaskAsProcessed(expectedReadyTask.getTaskId());
 
         assertTrue(expectedReadyTask.getLastProcessedAt().isPresent());
     }

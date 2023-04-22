@@ -1,6 +1,8 @@
 package ru.strict.controltime.domain.entity.task;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.Errors;
 import ru.strict.test.AssertUtil;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class TaskBuilderTest {
 
     @Test
@@ -21,7 +24,7 @@ class TaskBuilderTest {
                 TaskError.sleepDurationIsRequiredErrorCode);
 
         try {
-            new TaskBuilder().build();
+            Task.builder().build();
         } catch (Errors.ErrorsException ex) {
             AssertUtil.assertExceptionByCodes(ex, expectedErrorCodes);
             return;
@@ -31,40 +34,15 @@ class TaskBuilderTest {
     }
 
     @Test
-    void testBuild_RequiredParams_ReturnTask() {
-        var expectedTaskId = TaskStub.getId();
-        var expectedMessage = TaskStub.getMessage();
-        var expectedSleepDuration = Duration.ofMinutes(30);
-
-        var task = new TaskBuilder().
-                id(expectedTaskId).
-                message(expectedMessage).
-                sleepDuration(expectedSleepDuration).
-                build();
-
-        assertNotNull(task);
-
-        assertEquals(expectedTaskId, task.getId());
-        assertEquals(expectedMessage, task.getMessage());
-        assertEquals(expectedSleepDuration, task.getSleepDuration());
-        assertFalse(task.getLastProcessedAt().isPresent());
-        assertNotNull(task.getStartedAt());
-    }
-
-    @Test
     void testBuild_AllValidParams_ReturnTask() {
         var expectedTaskId = TaskStub.getId();
         var expectedMessage = TaskStub.getMessage();
         var expectedSleepDuration = Duration.ofMinutes(30);
-        var expectedStartedAt = Instant.ofEpochMilli(1676045473477L);
-        var expectedLastProcessedAt = Instant.ofEpochMilli(1676047473477L);
 
-        var task = new TaskBuilder().
+        var task = Task.builder().
                 id(expectedTaskId).
                 message(expectedMessage).
                 sleepDuration(expectedSleepDuration).
-                startedAt(expectedStartedAt).
-                lastProcessedAt(expectedLastProcessedAt).
                 build();
 
         assertNotNull(task);
@@ -72,8 +50,5 @@ class TaskBuilderTest {
         assertEquals(expectedTaskId, task.getId());
         assertEquals(expectedMessage, task.getMessage());
         assertEquals(expectedSleepDuration, task.getSleepDuration());
-        assertTrue(task.getLastProcessedAt().isPresent());
-        assertEquals(expectedLastProcessedAt, task.getLastProcessedAt().get());
-        assertEquals(expectedStartedAt, task.getStartedAt());
     }
 }

@@ -8,6 +8,6 @@ import java.time.Duration;
 @Value
 @Builder
 public class CreateTaskParams {
-    String Message;
+    String message;
     Duration sleepDuration;
 }

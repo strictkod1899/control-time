@@ -13,7 +13,7 @@ public class TimeManagerError {
         return new CodeableException(taskNotFoundErrorCode, String.format("Task not found by id = '%s'", taskId));
     }
 
-    public CodeableException errTimeManagerId() {
+    public CodeableException errTimeManagerIdIsRequired() {
         return new CodeableException(timeManagerIdIsRequiredErrorCode, "TimeManagerId is required");
     }
 }

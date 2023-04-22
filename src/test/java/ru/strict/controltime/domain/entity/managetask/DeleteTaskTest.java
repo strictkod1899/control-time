@@ -1,11 +1,11 @@
-package ru.strict.controltime.domain.entity.manager;
+package ru.strict.controltime.domain.entity.managetask;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import ru.strict.controltime.domain.entity.managetask.ManageTaskError;
+import ru.strict.controltime.domain.entity.task.TaskError;
+import ru.strict.controltime.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TaskStub;
-import ru.strict.controltime.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
 import ru.strict.test.FailTestException;
 
@@ -18,10 +18,10 @@ class DeleteTaskTest {
 
     @Test
     void testDeleteTask_TaskIdIsNull_ThrowException() {
-        var timeManager = TimeManagerStub.getFullTimeManager();
+        var manageTasks = ManageTaskStub.getFullManageTasks();
 
         try {
-            timeManager.deleteTask(null);
+            manageTasks.deleteTask(null);
         } catch (CodeableException ex) {
             assertTrue(ex.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
             return;
@@ -32,16 +32,16 @@ class DeleteTaskTest {
 
     @Test
     void testDeleteTask_TaskNotFound_ThrowException() {
-        var timeManager = TimeManagerStub.getFullTimeManager();
-        var originalTasksCount = timeManager.getManageTasks().size();
+        var manageTasks = ManageTaskStub.getFullManageTasks();
+        var originalTasksCount = manageTasks.toList().size();
         var taskId = TaskStub.getId();
 
         try {
-            timeManager.deleteTask(taskId);
+            manageTasks.deleteTask(taskId);
         } catch (CodeableException ex) {
             assertTrue(ex.equalsByCode(ManageTaskError.taskNotFoundErrorCode));
 
-            var actualTasksCount = timeManager.getManageTasks().size();
+            var actualTasksCount = manageTasks.toList().size();
             assertEquals(originalTasksCount, actualTasksCount);
 
             return;
@@ -52,11 +52,12 @@ class DeleteTaskTest {
 
     @Test
     void testDeleteTask_ValidParams_NoError() {
-        var timeManager = TimeManagerStub.getFullTimeManager();
-        var taskForRemove = timeManager.getTasks().iterator().next();
+        var manageTasks = ManageTaskStub.getFullManageTasks();
+        var manageTaskForRemove = manageTasks.toList().iterator().next();
+        var removeTaskId = manageTaskForRemove.getTaskId();
 
-        timeManager.deleteTask(taskForRemove.getId());
+        manageTasks.deleteTask(removeTaskId);
 
-        assertFalse(timeManager.getTaskMessage(taskForRemove.getId()).isPresent());
+        assertFalse(manageTasks.getManageTaskById(removeTaskId).isPresent());
     }
 }

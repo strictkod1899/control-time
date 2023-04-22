@@ -1,6 +1,8 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.domain.entity.task.TaskError;
 import ru.strict.controltime.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TimeManagerStub;
@@ -9,6 +11,7 @@ import ru.strict.test.FailTestException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class GetTaskMessageTest {
 
     @Test

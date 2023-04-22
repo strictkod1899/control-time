@@ -3,6 +3,7 @@ package ru.strict.controltime.testdouble.stub.entity;
 import lombok.experimental.UtilityClass;
 import ru.strict.controltime.domain.entity.manager.TimeManager;
 import ru.strict.controltime.domain.entity.manager.TimeManagerId;
+import ru.strict.controltime.domain.entity.managetask.ManageTask;
 import ru.strict.controltime.domain.entity.task.Task;
 
 import java.util.List;
@@ -11,28 +12,28 @@ import java.util.List;
 public class TimeManagerStub {
 
     public TimeManager getTimeManagerWithoutReadyTasks() {
-        var tasksList = List.of(TaskStub.getBaseTask(), TaskStub.getFullTask());
+        var manageTasksList = List.of(ManageTaskStub.getBaseManageTask(), ManageTaskStub.getFullManageTask());
 
-        return getTimeManagerFrom(tasksList);
+        return getTimeManagerFrom(manageTasksList);
     }
 
     public TimeManager getFullTimeManager() {
         var tasksList = List.of(
-                TaskStub.getBaseTask(),
-                TaskStub.getFullTask(),
-                TaskStub.getReadyBaseTask(),
-                TaskStub.getReadyFullTask()
+                ManageTaskStub.getBaseManageTask(),
+                ManageTaskStub.getFullManageTask(),
+                ManageTaskStub.getReadyBaseManageTask(),
+                ManageTaskStub.getReadyFullManageTask()
         );
 
         return getTimeManagerFrom(tasksList);
     }
 
-    public TimeManager getTimeManagerFrom(List<Task> tasksList) {
-        return TimeManager.from(getId(), tasksList);
+    public TimeManager getTimeManagerFrom(List<ManageTask> manageTaskList) {
+        return TimeManager.from(getId(), manageTaskList);
     }
 
-    public TimeManager getBaseTimeManager() {
-        return TimeManager.init();
+    public TimeManager getEmptyTimeManager() {
+        return TimeManager.init(List.of());
     }
 
     public TimeManagerId getId() {

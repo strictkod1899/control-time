@@ -1,22 +1,28 @@
 package ru.strict.controltime.domain.entity.manager;
 
 import org.junit.jupiter.api.Test;
-import ru.strict.controltime.domain.entity.task.TaskError;
-import ru.strict.controltime.testdouble.stub.entity.TaskStub;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import ru.strict.controltime.domain.entity.managetask.ManageTask;
+import ru.strict.controltime.domain.entity.managetask.ManageTaskError;
+import ru.strict.controltime.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
 import ru.strict.test.FailTestException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Execution(ExecutionMode.CONCURRENT)
 class TimeManagerFromTest {
 
     @Test
-    void testFrom_IdIsNull_ThrowException() {
+    void testInit_IdIsNull_ThrowException() {
         try {
-            TimeManager.from(null, null);
+            TimeManager.from(null, List.of());
         } catch (CodeableException ex) {
             assertTrue(ex.equalsByCode(TimeManagerError.timeManagerIdIsRequiredErrorCode));
             return;
@@ -26,11 +32,13 @@ class TimeManagerFromTest {
     }
 
     @Test
-    void testFrom_TasksIsNull_ThrowException() {
+    void testInit_TasksIsNull_ReturnManager() {
+        var givenId = TimeManagerStub.getId();
+
         try {
-            TimeManager.from(TimeManagerStub.getId(), null);
+            TimeManager.from(givenId, null);
         } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskError.tasksListIsRequiredErrorCode));
+            assertTrue(ex.equalsByCode(ManageTaskError.manageTaskListIsRequiredErrorCode));
             return;
         }
 
@@ -38,22 +46,28 @@ class TimeManagerFromTest {
     }
 
     @Test
-    void testFrom_TasksIsEmpty_ReturnManager() {
-        var timeManager = TimeManager.from(TimeManagerStub.getId(), List.of());
+    void testInit_TasksIsEmpty_ReturnManager() {
+        var expectedId = TimeManagerStub.getId();
 
-        assertTrue(timeManager.getTasks().isEmpty());
+        var timeManager = TimeManager.from(expectedId, List.of());
+
+        assertEquals(expectedId, timeManager.getId());
+        assertTrue(timeManager.getManageTasks().isEmpty());
     }
 
     @Test
-    void testFrom_ValidParams_ReturnManager() {
-        var expectedTasks = List.of(
-                TaskStub.getBaseTask(),
-                TaskStub.getFullTask()
-        );
+    void testInit_ValidParams_ReturnManager() {
+        var expectedId = TimeManagerStub.getId();
+        var expectedManageTasks = ManageTaskStub.getFullManageTasks().toList();
+        var expectedTasks = expectedManageTasks.stream().map(ManageTask::getTask).toList();
 
-        var timeManager = TimeManager.from(TimeManagerStub.getId(), expectedTasks);
+        var timeManager = TimeManager.from(expectedId, expectedManageTasks);
 
-        assertEquals(expectedTasks.size(), timeManager.getTasks().size());
-        assertTrue(timeManager.getTasks().containsAll(expectedTasks));
+        assertEquals(expectedId, timeManager.getId());
+        assertEquals(expectedManageTasks.size(), timeManager.getManageTasks().size());
+        assertTrue(timeManager.getManageTasks().containsAll(expectedManageTasks));
+
+        assertEquals(expectedManageTasks.size(), timeManager.getTasks().size());
+        assertTrue(expectedTasks.containsAll(timeManager.getTasks()));
     }
 }
