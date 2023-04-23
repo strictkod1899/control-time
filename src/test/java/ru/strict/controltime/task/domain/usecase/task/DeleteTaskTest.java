@@ -57,15 +57,15 @@ class DeleteTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testDeleteTask_DeleteTaskRepoError_ThrowException() {
-        var expectedException = ExceptionStub.getException();
-        doThrow(expectedException).when(taskRepositoryMock).delete(any());
+        var expectedEx = ExceptionStub.getException();
+        doThrow(expectedEx).when(taskRepositoryMock).delete(any());
 
         var givenTask = TaskStub.getTask();
         doReturn(Optional.of(givenTask)).when(taskRepositoryMock).getById(any());
 
         var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.deleteTask(givenTask.getId().toString()));
 
-        assertEquals(expectedException, actualEx);
+        assertEquals(expectedEx, actualEx);
 
         verify(taskRepositoryMock).getById(any());
         verify(taskRepositoryMock).delete(any());
@@ -74,8 +74,8 @@ class DeleteTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testDeleteTask_PublishTaskEventError_NoError() {
-        var expectedException = ExceptionStub.getException();
-        doThrow(expectedException).when(taskEventPublisherMock).taskDeleted(any());
+        var expectedEx = ExceptionStub.getException();
+        doThrow(expectedEx).when(taskEventPublisherMock).taskDeleted(any());
 
         var givenTask = TaskStub.getTask();
         doReturn(Optional.of(givenTask)).when(taskRepositoryMock).getById(any());

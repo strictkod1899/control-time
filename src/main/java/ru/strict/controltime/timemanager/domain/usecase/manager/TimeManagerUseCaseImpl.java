@@ -2,12 +2,8 @@ package ru.strict.controltime.timemanager.domain.usecase.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.task.boundary.model.CreateTaskData;
-import ru.strict.controltime.task.boundary.repository.TaskRepository;
-import ru.strict.controltime.task.boundary.usecase.TaskUseCase;
 import ru.strict.controltime.task.domain.entity.task.Message;
-import ru.strict.controltime.task.domain.entity.task.SleepDuration;
-import ru.strict.controltime.task.domain.entity.task.Task;
+import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
 import ru.strict.controltime.timemanager.boundary.usecase.TimeManagerUseCase;
@@ -26,10 +22,26 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
 
     @Override
     public void processReadyTasks() {
-        throw new UnsupportedOperationException("impl me");
+        var timeManagerOptional = timeManagerRepository.getActiveManager();
+        var timeManager = timeManagerOptional.orElseThrow(TimeManagerUseCaseError::errActiveTimeManagerNotFound);
+
+        timeManager.getReadyTaskIds().
+                forEach(readyTaskId -> processReadyTask(timeManager, readyTaskId));
+
+        timeManagerRepository.setActiveManager(timeManager);
     }
 
     public static TimeManagerUseCaseBuilder builder() {
         return new TimeManagerUseCaseBuilder();
+    }
+
+    private void processReadyTask(TimeManager timeManager, TaskId readyTaskId) {
+        var messageOptional = timeManager.getTaskMessage(readyTaskId);
+        var message = messageOptional.orElseThrow(
+                () -> TimeManagerUseCaseError.errReadyTaskNotFoundById(readyTaskId)
+        );
+
+        notificationPresenter.showMessage(message);
+        timeManager.markTaskAsProcessed(readyTaskId);
     }
 }

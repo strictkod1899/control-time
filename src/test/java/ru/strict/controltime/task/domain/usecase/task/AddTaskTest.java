@@ -60,8 +60,8 @@ class AddTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testAddTask_InsertTaskRepoError_ThrowException() {
-        var expectedException = ExceptionStub.getException();
-        doThrow(expectedException).when(taskRepositoryMock).insert(any());
+        var expectedEx = ExceptionStub.getException();
+        doThrow(expectedEx).when(taskRepositoryMock).insert(any());
 
         var createTaskParams = CreateTaskData.builder().
                 message(TaskStub.getMessage().toString()).
@@ -70,7 +70,7 @@ class AddTaskTest extends TaskUseCaseCommon {
 
         var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
 
-        assertEquals(expectedException, actualEx);
+        assertEquals(expectedEx, actualEx);
 
         verify(taskRepositoryMock, only()).insert(any());
         verifyNoInteractions(taskEventPublisherMock);
@@ -78,8 +78,8 @@ class AddTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testAddTask_PublishTaskEventError_NoError() {
-        var expectedException = ExceptionStub.getException();
-        doThrow(expectedException).when(taskEventPublisherMock).taskCreated(any());
+        var expectedEx = ExceptionStub.getException();
+        doThrow(expectedEx).when(taskEventPublisherMock).taskCreated(any());
         doNothing().when(taskRepositoryMock).insert(any());
 
         var createTaskParams = CreateTaskData.builder().
