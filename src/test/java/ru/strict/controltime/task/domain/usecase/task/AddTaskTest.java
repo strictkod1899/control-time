@@ -4,17 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import ru.strict.controltime.task.boundary.model.CreateTaskData;
-import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
 import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskError;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.CodeableException;
 import ru.strict.test.ExceptionStub;
 import ru.strict.test.FailTestException;
-import ru.strict.util.ReflectionUtil;
 
 import java.time.Duration;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -104,7 +101,9 @@ class AddTaskTest extends TaskUseCaseCommon {
     }
 
     @Test
-    void testAddTask_ValidParams_NoError() {
+    void testAddTask_PublishTaskEventError_NoError() {
+        var expectedException = ExceptionStub.getException();
+        doThrow(expectedException).when(taskEventPublisherMock).taskCreated(any());
         doNothing().when(taskRepositoryMock).insert(any());
 
         var createTaskParams = CreateTaskData.builder().
@@ -115,7 +114,29 @@ class AddTaskTest extends TaskUseCaseCommon {
         this.taskUseCase.addTask(createTaskParams);
 
         verify(taskRepositoryMock, only()).insert(any());
-        verifyNoInteractions(taskEventPublisherMock);
+        verify(taskEventPublisherMock, only()).taskCreated(any());
+
+        var insertedTaskCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepositoryMock).insert(insertedTaskCaptor.capture());
+        var insertedTask = insertedTaskCaptor.getValue();
+        assertEquals(createTaskParams.getMessage(), insertedTask.getMessage().toString());
+        assertEquals(createTaskParams.getSleepDuration().toNanos(), insertedTask.getSleepDuration().toNanos());
+    }
+
+    @Test
+    void testAddTask_ValidParams_NoError() {
+        doNothing().when(taskEventPublisherMock).taskCreated(any());
+        doNothing().when(taskRepositoryMock).insert(any());
+
+        var createTaskParams = CreateTaskData.builder().
+                message(TaskStub.getMessage().toString()).
+                sleepDuration(Duration.ofNanos(TaskStub.getSleepDuration().toNanos())).
+                build();
+
+        this.taskUseCase.addTask(createTaskParams);
+
+        verify(taskRepositoryMock, only()).insert(any());
+        verify(taskEventPublisherMock, only()).taskCreated(any());
 
         var insertedTaskCaptor = ArgumentCaptor.forClass(Task.class);
         verify(taskRepositoryMock).insert(insertedTaskCaptor.capture());
