@@ -3,12 +3,8 @@ package ru.strict.controltime.timemanager.domain.entity.managetask;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTask;
-import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTaskError;
-import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTasks;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 import java.util.function.Function;
@@ -21,15 +17,9 @@ class ManageTasksInitTest {
 
     @Test
     void testInit_ManageTasksListIsNull_ThrowException() {
-        try {
-            ManageTasks.init(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskListIsRequiredErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> ManageTasks.init(null));
 
-            return;
-        }
-
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskListIsRequiredErrorCode));
     }
 
     @Test
@@ -43,14 +33,9 @@ class ManageTasksInitTest {
         var task1 = TaskStub.getTask();
         var task2 = TaskStub.getTaskWithId(task1.getId());
 
-        try {
-            ManageTasks.init(List.of(task1, task2));
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.doubledTaskErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> ManageTasks.init(List.of(task1, task2)));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.doubledTaskErrorCode));
     }
 
     @Test

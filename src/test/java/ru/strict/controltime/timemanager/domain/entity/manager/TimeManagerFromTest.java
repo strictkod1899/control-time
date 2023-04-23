@@ -8,40 +8,28 @@ import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTaskErro
 import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class TimeManagerFromTest {
 
     @Test
     void testInit_IdIsNull_ThrowException() {
-        try {
-            TimeManager.from(null, List.of());
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TimeManagerError.timeManagerIdIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> TimeManager.from(null, List.of()));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(TimeManagerError.timeManagerIdIsRequiredErrorCode));
     }
 
     @Test
     void testInit_TasksIsNull_ReturnManager() {
         var givenId = TimeManagerStub.getId();
 
-        try {
-            TimeManager.from(givenId, null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.manageTaskListIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> TimeManager.from(givenId, null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.manageTaskListIsRequiredErrorCode));
     }
 
     @Test

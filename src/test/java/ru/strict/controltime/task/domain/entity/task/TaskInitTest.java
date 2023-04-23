@@ -4,14 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
-import ru.strict.exception.Errors;
+import ru.strict.exception.CodeableException;
+import ru.strict.exception.ErrorsException;
 import ru.strict.test.AssertUtil;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class TaskInitTest {
@@ -20,16 +19,12 @@ class TaskInitTest {
     void testInit_WithoutParams_ThrowException() {
         var expectedErrorCodes = List.of(
                 TaskError.messageIsRequiredErrorCode,
-                TaskError.sleepDurationIsRequiredErrorCode);
+                TaskError.sleepDurationIsRequiredErrorCode
+        );
 
-        try {
-            Task.init(null, null);
-        } catch (Errors.ErrorsException ex) {
-            AssertUtil.assertExceptionByCodes(ex, expectedErrorCodes);
-            return;
-        }
+        var actualEx = assertThrows(ErrorsException.class, () -> Task.init(null, null));
 
-        new FailTestException();
+        AssertUtil.assertExceptionByCodes(actualEx, expectedErrorCodes);
     }
 
     @Test

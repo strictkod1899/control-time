@@ -7,12 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.strict.controltime.task.boundary.event.TaskEventPublisher;
 import ru.strict.controltime.task.boundary.repository.TaskRepository;
-import ru.strict.exception.Errors;
+import ru.strict.exception.ErrorsException;
 import ru.strict.test.AssertUtil;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,14 +26,9 @@ class TaskUseCaseBuilderTest {
                 TaskUseCaseError.taskEventPublisherIsRequiredErrorCode
         );
 
-        try {
-            TaskUseCaseImpl.builder().build();
-        } catch (Errors.ErrorsException ex) {
-            AssertUtil.assertExceptionByCodes(ex, expectedErrorCodes);
-            return;
-        }
+        var actualEx = assertThrows(ErrorsException.class, () -> TaskUseCaseImpl.builder().build());
 
-        throw new FailTestException();
+        AssertUtil.assertExceptionByCodes(actualEx, expectedErrorCodes);
     }
 
     @Test

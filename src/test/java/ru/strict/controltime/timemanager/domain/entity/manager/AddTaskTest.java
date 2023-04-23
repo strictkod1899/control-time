@@ -8,7 +8,6 @@ import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 import java.util.function.Function;
@@ -23,14 +22,9 @@ class AddTaskTest {
     void testAddTask_WithoutParams_ThrowException() {
         var timeManager = TimeManagerStub.getEmptyTimeManager();
 
-        try {
-            timeManager.addTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.addTask(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIsRequiredErrorCode));
     }
 
     @Test

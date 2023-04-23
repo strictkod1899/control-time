@@ -5,7 +5,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,16 +15,11 @@ class MarkAsProcessedTest {
     void testMarkAsProcessed_NotReady_LastProcessedAtIsNull_ThrowException() {
         var manageTask = ManageTaskStub.getBaseManageTask();
 
-        try {
-            manageTask.markAsProcessed();
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIsNotReadyErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> manageTask.markAsProcessed());
 
-            assertFalse(manageTask.getLastProcessedAt().isPresent());
-            return;
-        }
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIsNotReadyErrorCode));
 
-        throw new FailTestException();
+        assertFalse(manageTask.getLastProcessedAt().isPresent());
     }
 
     @Test
@@ -42,16 +36,11 @@ class MarkAsProcessedTest {
         var manageTask = ManageTaskStub.getFullManageTask();
         var originalLastProcessedAt = manageTask.getLastProcessedAt().orElseThrow();
 
-        try {
-            manageTask.markAsProcessed();
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIsNotReadyErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> manageTask.markAsProcessed());
 
-            assertEquals(originalLastProcessedAt, manageTask.getLastProcessedAt().orElseThrow());
-            return;
-        }
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIsNotReadyErrorCode));
 
-        throw new FailTestException();
+        assertEquals(originalLastProcessedAt, manageTask.getLastProcessedAt().orElseThrow());
     }
 
     @Test

@@ -20,6 +20,11 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
     TimeManagerRepository timeManagerRepository;
 
     @Override
+    public void initTimeManager() {
+        throw new UnsupportedOperationException("impl me");
+    }
+
+    @Override
     public void processReadyTasks() {
         throw new UnsupportedOperationException("impl me");
     }

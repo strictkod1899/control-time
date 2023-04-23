@@ -5,7 +5,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,15 +17,9 @@ class ManageTasksFromTest {
 
     @Test
     void testFrom_ManageTasksListIsNull_ThrowException() {
-        try {
-            ManageTasks.from(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.manageTaskListIsRequiredErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> ManageTasks.from(null));
 
-            return;
-        }
-
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.manageTaskListIsRequiredErrorCode));
     }
 
     @Test
@@ -42,14 +35,9 @@ class ManageTasksFromTest {
                 task(manageTask1.getTask()).
                 build();
 
-        try {
-            ManageTasks.from(List.of(manageTask1, manageTask2));
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.doubledTaskErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> ManageTasks.from(List.of(manageTask1, manageTask2)));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.doubledTaskErrorCode));
     }
 
     @Test

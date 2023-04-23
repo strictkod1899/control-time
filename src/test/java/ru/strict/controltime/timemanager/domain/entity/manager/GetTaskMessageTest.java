@@ -5,9 +5,9 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.task.domain.entity.task.TaskError;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
+import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTaskError;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,14 +18,9 @@ class GetTaskMessageTest {
     void testGetTaskMessage_TaskIdIsNull_ThrowException() {
         var timeManager = TimeManagerStub.getFullTimeManager();
 
-        try {
-            timeManager.getTaskMessage(null);
-        } catch (CodeableException ex) {
-            ex.equalsByCode(TaskError.taskIdIsRequiredErrorCode);
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.getTaskMessage(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
     }
 
     @Test

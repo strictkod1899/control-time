@@ -9,7 +9,6 @@ import ru.strict.controltime.task.domain.entity.task.TaskError;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.CodeableException;
 import ru.strict.test.ExceptionStub;
-import ru.strict.test.FailTestException;
 
 import java.time.Duration;
 
@@ -25,36 +24,24 @@ class AddTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testAddTask_WithoutParams_ThrowException() {
-        try {
-            this.taskUseCase.addTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskUseCaseError.createTaskDataIsRequiredErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(null));
 
-            verifyNoInteractions(taskRepositoryMock);
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(TaskUseCaseError.createTaskDataIsRequiredErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
     void testAddTask_WithoutMessage_ThrowException() {
         var createTaskParams = CreateTaskData.builder().build();
 
-        try {
-            this.taskUseCase.addTask(createTaskParams);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskError.messageIsEmptyErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
 
-            verifyNoInteractions(taskRepositoryMock);
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(TaskError.messageIsEmptyErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
@@ -63,18 +50,12 @@ class AddTaskTest extends TaskUseCaseCommon {
                 message(TaskStub.getMessage().toString()).
                 build();
 
-        try {
-            this.taskUseCase.addTask(createTaskParams);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskError.durationIsRequiredErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
 
-            verifyNoInteractions(taskRepositoryMock);
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(TaskError.durationIsRequiredErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
@@ -87,17 +68,12 @@ class AddTaskTest extends TaskUseCaseCommon {
                 sleepDuration(Duration.ofNanos(TaskStub.getSleepDuration().toNanos())).
                 build();
 
-        try {
-            this.taskUseCase.addTask(createTaskParams);
-        } catch (CodeableException ex) {
-            assertEquals(expectedException, ex);
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
 
-            verify(taskRepositoryMock, only()).insert(any());
-            verifyNoInteractions(taskEventPublisherMock);
-            return;
-        }
+        assertEquals(expectedException, actualEx);
 
-        throw new FailTestException();
+        verify(taskRepositoryMock, only()).insert(any());
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test

@@ -8,7 +8,6 @@ import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.domainprimitive.id.EntityIdError;
 import ru.strict.exception.CodeableException;
 import ru.strict.test.ExceptionStub;
-import ru.strict.test.FailTestException;
 
 import java.util.Optional;
 
@@ -24,34 +23,22 @@ class DeleteTaskTest extends TaskUseCaseCommon {
 
     @Test
     void testDeleteTask_TaskIdIsNull_ThrowException() {
-        try {
-            this.taskUseCase.deleteTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskUseCaseError.taskIdIsRequiredErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.deleteTask(null));
 
-            verifyNoInteractions(taskRepositoryMock);
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(TaskUseCaseError.taskIdIsRequiredErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
     void testDeleteTask_EmptyTaskId_ThrowException() {
-        try {
-            this.taskUseCase.deleteTask("");
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(EntityIdError.idIsEmptyErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.deleteTask(""));
 
-            verifyNoInteractions(taskRepositoryMock);
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(EntityIdError.idIsEmptyErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
@@ -60,18 +47,12 @@ class DeleteTaskTest extends TaskUseCaseCommon {
 
         var givenTaskId = TaskStub.getId();
 
-        try {
-            this.taskUseCase.deleteTask(givenTaskId.toString());
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TaskUseCaseError.taskNotFoundErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.deleteTask(givenTaskId.toString()));
 
-            verify(taskRepositoryMock, only()).getById(any());
-            verifyNoInteractions(taskEventPublisherMock);
+        assertTrue(actualEx.equalsByCode(TaskUseCaseError.taskNotFoundErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        verify(taskRepositoryMock, only()).getById(any());
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test
@@ -82,18 +63,13 @@ class DeleteTaskTest extends TaskUseCaseCommon {
         var givenTask = TaskStub.getTask();
         doReturn(Optional.of(givenTask)).when(taskRepositoryMock).getById(any());
 
-        try {
-            this.taskUseCase.deleteTask(givenTask.getId().toString());
-        } catch (CodeableException ex) {
-            assertEquals(expectedException, ex);
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.deleteTask(givenTask.getId().toString()));
 
-            verify(taskRepositoryMock).getById(any());
-            verify(taskRepositoryMock).delete(any());
-            verifyNoInteractions(taskEventPublisherMock);
-            return;
-        }
+        assertEquals(expectedException, actualEx);
 
-        throw new FailTestException();
+        verify(taskRepositoryMock).getById(any());
+        verify(taskRepositoryMock).delete(any());
+        verifyNoInteractions(taskEventPublisherMock);
     }
 
     @Test

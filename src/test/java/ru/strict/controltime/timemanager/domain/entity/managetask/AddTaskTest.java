@@ -6,7 +6,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,14 +16,9 @@ class AddTaskTest {
     void testAddTask_TaskIsNull_ThrowException() {
         var manageTasks = ManageTaskStub.getEmptyManageTasks();
 
-        try {
-            manageTasks.addTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> manageTasks.addTask(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIsRequiredErrorCode));
     }
 
     @Test
@@ -33,14 +27,9 @@ class AddTaskTest {
         var existsManageTask = manageTasks.toList().iterator().next();
         var doubledNewTask = TaskStub.getTaskWithId(existsManageTask.getTaskId());
 
-        try {
-            manageTasks.addTask(doubledNewTask);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.doubledTaskErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> manageTasks.addTask(doubledNewTask));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.doubledTaskErrorCode));
     }
 
     @Test

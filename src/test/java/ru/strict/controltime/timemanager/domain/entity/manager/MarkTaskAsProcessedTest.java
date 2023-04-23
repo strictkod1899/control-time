@@ -8,7 +8,6 @@ import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
@@ -21,28 +20,18 @@ class MarkTaskAsProcessedTest {
     void testMarkTaskAsProcessed_TaskIdIsNull_ThrowException() {
         var timeManager = TimeManagerStub.getFullTimeManager();
 
-        try {
-            timeManager.markTaskAsProcessed(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.markTaskAsProcessed(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
     }
 
     @Test
     void testMarkTaskAsProcessed_TaskNotExists_ThrowException() {
         var timeManager = TimeManagerStub.getFullTimeManager();
 
-        try {
-            timeManager.markTaskAsProcessed(TaskStub.getId());
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(TimeManagerError.taskNotFoundErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.markTaskAsProcessed(TaskStub.getId()));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(TimeManagerError.taskNotFoundErrorCode));
     }
 
     @Test

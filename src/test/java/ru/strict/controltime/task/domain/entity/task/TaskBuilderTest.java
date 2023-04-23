@@ -3,12 +3,9 @@ package ru.strict.controltime.task.domain.entity.task;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import ru.strict.controltime.task.domain.entity.task.Task;
-import ru.strict.controltime.task.domain.entity.task.TaskError;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
-import ru.strict.exception.Errors;
+import ru.strict.exception.ErrorsException;
 import ru.strict.test.AssertUtil;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
@@ -24,14 +21,9 @@ class TaskBuilderTest {
                 TaskError.messageIsRequiredErrorCode,
                 TaskError.sleepDurationIsRequiredErrorCode);
 
-        try {
-            Task.builder().build();
-        } catch (Errors.ErrorsException ex) {
-            AssertUtil.assertExceptionByCodes(ex, expectedErrorCodes);
-            return;
-        }
+        var actualEx = assertThrows(ErrorsException.class, () -> Task.builder().build());
 
-        new FailTestException();
+        AssertUtil.assertExceptionByCodes(actualEx, expectedErrorCodes);
     }
 
     @Test

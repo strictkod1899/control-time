@@ -7,11 +7,8 @@ import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTaskErro
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class DeleteTaskTest {
@@ -20,14 +17,9 @@ class DeleteTaskTest {
     void testDeleteTask_TaskIdIsNull_ThrowException() {
         var timeManager = TimeManagerStub.getFullTimeManager();
 
-        try {
-            timeManager.deleteTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.deleteTask(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
     }
 
     @Test
@@ -36,18 +28,12 @@ class DeleteTaskTest {
         var originalTasksCount = timeManager.getManageTasks().size();
         var taskId = TaskStub.getId();
 
-        try {
-            timeManager.deleteTask(taskId);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskNotFoundErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> timeManager.deleteTask(taskId));
 
-            var actualTasksCount = timeManager.getManageTasks().size();
-            assertEquals(originalTasksCount, actualTasksCount);
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskNotFoundErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        var actualTasksCount = timeManager.getManageTasks().size();
+        assertEquals(originalTasksCount, actualTasksCount);
     }
 
     @Test

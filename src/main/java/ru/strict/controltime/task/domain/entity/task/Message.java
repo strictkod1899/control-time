@@ -8,7 +8,7 @@ import ru.strict.validate.CommonValidator;
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Message {
-    private static final int MAX_MESSAGE_LENGTH = 51;
+    public static final int MAX_MESSAGE_LENGTH = 51;
 
     String value;
 

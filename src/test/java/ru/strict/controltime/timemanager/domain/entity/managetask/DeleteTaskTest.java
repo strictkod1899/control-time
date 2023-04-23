@@ -6,11 +6,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.ManageTaskStub;
 import ru.strict.controltime.task.testdouble.stub.entity.TaskStub;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class DeleteTaskTest {
@@ -19,14 +16,9 @@ class DeleteTaskTest {
     void testDeleteTask_TaskIdIsNull_ThrowException() {
         var manageTasks = ManageTaskStub.getFullManageTasks();
 
-        try {
-            manageTasks.deleteTask(null);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> manageTasks.deleteTask(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskIdIsRequiredErrorCode));
     }
 
     @Test
@@ -35,18 +27,12 @@ class DeleteTaskTest {
         var originalTasksCount = manageTasks.toList().size();
         var taskId = TaskStub.getId();
 
-        try {
-            manageTasks.deleteTask(taskId);
-        } catch (CodeableException ex) {
-            assertTrue(ex.equalsByCode(ManageTaskError.taskNotFoundErrorCode));
+        var actualEx = assertThrows(CodeableException.class, () -> manageTasks.deleteTask(taskId));
 
-            var actualTasksCount = manageTasks.toList().size();
-            assertEquals(originalTasksCount, actualTasksCount);
+        assertTrue(actualEx.equalsByCode(ManageTaskError.taskNotFoundErrorCode));
 
-            return;
-        }
-
-        throw new FailTestException();
+        var actualTasksCount = manageTasks.toList().size();
+        assertEquals(originalTasksCount, actualTasksCount);
     }
 
     @Test

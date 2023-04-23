@@ -3,16 +3,12 @@ package ru.strict.controltime.task.domain.entity.task;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.domainprimitive.id.EntityIdError;
 import ru.strict.exception.CodeableException;
-import ru.strict.test.FailTestException;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Execution(ExecutionMode.CONCURRENT)
 class TaskIdTest {
@@ -27,38 +23,23 @@ class TaskIdTest {
 
     @Test
     void testIdFrom_StringIsNull_ThrowError() {
-        try {
-            TaskId.from(null);
-        } catch (CodeableException ex) {
-            assertTrue(CodeableException.equalsByCode(ex, EntityIdError.idIsEmptyErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> TaskId.from(null));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(EntityIdError.idIsEmptyErrorCode));
     }
 
     @Test
     void testIdFrom_EmptyString_ThrowError() {
-        try {
-            TaskId.from("");
-        } catch (CodeableException ex) {
-            assertTrue(CodeableException.equalsByCode(ex, EntityIdError.idIsEmptyErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> TaskId.from(""));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(EntityIdError.idIsEmptyErrorCode));
     }
 
     @Test
     void testIdFrom_NotUUID_ThrowError() {
-        try {
-            TaskId.from("123");
-        } catch (CodeableException ex) {
-            assertTrue(CodeableException.equalsByCode(ex, EntityIdError.invalidIdFormatErrorCode));
-            return;
-        }
+        var actualEx = assertThrows(CodeableException.class, () -> TaskId.from("123"));
 
-        throw new FailTestException();
+        assertTrue(actualEx.equalsByCode(EntityIdError.invalidIdFormatErrorCode));
     }
 
     @Test

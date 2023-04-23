@@ -7,13 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
-import ru.strict.exception.Errors;
+import ru.strict.exception.ErrorsException;
 import ru.strict.test.AssertUtil;
-import ru.strict.test.FailTestException;
 
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -26,14 +26,9 @@ class TimeManagerUseCaseBuilderTest {
                 TimeManagerUseCaseError.timeManagerRepositoryIsRequiredErrorCode
         );
 
-        try {
-            TimeManagerUseCaseImpl.builder().build();
-        } catch (Errors.ErrorsException ex) {
-            AssertUtil.assertExceptionByCodes(ex, expectedErrorCodes);
-            return;
-        }
+        var actualEx = assertThrows(ErrorsException.class, () -> TimeManagerUseCaseImpl.builder().build());
 
-        throw new FailTestException();
+        AssertUtil.assertExceptionByCodes(actualEx, expectedErrorCodes);
     }
 
     @Test
