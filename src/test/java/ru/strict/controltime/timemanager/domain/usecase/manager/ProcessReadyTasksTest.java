@@ -1,7 +1,6 @@
 package ru.strict.controltime.timemanager.domain.usecase.manager;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import ru.strict.controltime.timemanager.testdouble.stub.entity.TimeManagerStub;
 import ru.strict.exception.CodeableException;
@@ -12,7 +11,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Disabled
 class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
 
     @BeforeEach
@@ -30,6 +28,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         assertEquals(expectedEx, actualEx);
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(taskRepositoryMock);
     }
 
     @Test
@@ -41,6 +40,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         assertTrue(actualEx.equalsByCode(TimeManagerUseCaseError.activeTimeManagerNotFoundErrorCode));
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(taskRepositoryMock);
     }
 
     @Test
@@ -54,6 +54,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         verify(timeManagerRepositoryMock).getActiveManager();
         verify(timeManagerRepositoryMock).setActiveManager(any());
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(taskRepositoryMock);
     }
 
     @Test
@@ -67,6 +68,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         verify(timeManagerRepositoryMock).getActiveManager();
         verify(timeManagerRepositoryMock).setActiveManager(any());
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(taskRepositoryMock);
     }
 
     @Test
@@ -82,6 +84,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         assertEquals(expectedEx, actualEx);
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verify(notificationPresenterMock, only()).showMessage(any());
+        verifyNoInteractions(taskRepositoryMock);
     }
 
     @Test
@@ -102,5 +105,6 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
         verify(timeManagerRepositoryMock).getActiveManager();
         verify(timeManagerRepositoryMock).setActiveManager(eq(expectedTimeManager));
         verify(notificationPresenterMock, times(expectedReadyTasksCount)).showMessage(any());
+        verifyNoInteractions(taskRepositoryMock);
     }
 }

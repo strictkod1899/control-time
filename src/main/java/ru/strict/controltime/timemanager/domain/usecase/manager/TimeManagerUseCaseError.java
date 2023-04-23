@@ -8,6 +8,7 @@ import ru.strict.exception.CodeableException;
 public class TimeManagerUseCaseError {
     public final String timeManagerRepositoryIsRequiredErrorCode = "SYS";
     public final String notificationPresenterIsRequiredErrorCode = "SYS";
+    public final String taskRepositoryIsRequiredErrorCode = "SYS";
 
     public final String activeTimeManagerNotFoundErrorCode = "8e022e17-001";
     public final String readyTaskNotFoundErrorCode = "8e022e17-002";
@@ -18,6 +19,10 @@ public class TimeManagerUseCaseError {
 
     public CodeableException errNotificationPresenterIsRequired() {
         return new CodeableException(notificationPresenterIsRequiredErrorCode, "notificationPresenter is required");
+    }
+
+    public CodeableException errTaskRepositoryIsRequired() {
+        return new CodeableException(taskRepositoryIsRequiredErrorCode, "taskRepository is required");
     }
 
     public CodeableException errActiveTimeManagerNotFound() {

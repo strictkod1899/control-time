@@ -1,12 +1,14 @@
 package ru.strict.controltime.timemanager.domain.usecase.manager;
 
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
+import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
 import ru.strict.exception.Errors;
 
 public class TimeManagerUseCaseBuilder {
     NotificationPresenter notificationPresenter;
     TimeManagerRepository timeManagerRepository;
+    TaskRepository taskRepository;
 
     Errors errors;
 
@@ -21,6 +23,11 @@ public class TimeManagerUseCaseBuilder {
 
     public TimeManagerUseCaseBuilder timeManagerRepository(TimeManagerRepository timeManagerRepository) {
         this.timeManagerRepository = timeManagerRepository;
+        return this;
+    }
+
+    public TimeManagerUseCaseBuilder taskRepository(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
         return this;
     }
 
@@ -40,12 +47,16 @@ public class TimeManagerUseCaseBuilder {
         if (timeManagerRepository == null) {
             errors.addError(TimeManagerUseCaseError.errTimeManagerRepositoryIsRequired());
         }
+        if (taskRepository == null) {
+            errors.addError(TimeManagerUseCaseError.errTaskRepositoryIsRequired());
+        }
     }
 
     private TimeManagerUseCaseImpl createFromBuilder() {
         var timeManagerUseCase = new TimeManagerUseCaseImpl();
         timeManagerUseCase.notificationPresenter = this.notificationPresenter;
         timeManagerUseCase.timeManagerRepository = this.timeManagerRepository;
+        timeManagerUseCase.taskRepository = this.taskRepository;
 
         return timeManagerUseCase;
     }
