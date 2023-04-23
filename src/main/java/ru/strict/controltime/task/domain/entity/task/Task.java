@@ -15,23 +15,11 @@ public class Task {
     SleepDuration sleepDuration;
 
     public static Task init(Message message, SleepDuration sleepDuration) {
-        var errors = new Errors();
-        if (message == null) {
-            errors.addError(TaskError.errMessageIsRequired());
-        }
-        if (sleepDuration == null) {
-            errors.addError(TaskError.errSleepDurationIsRequired());
-        }
-        if (errors.isPresent()) {
-            throw errors.toException();
-        }
-
-        var task = new Task();
-        task.id = TaskId.init();
-        task.message = message;
-        task.sleepDuration = sleepDuration;
-
-        return task;
+        return builder().
+                id(TaskId.init()).
+                message(message).
+                sleepDuration(sleepDuration).
+                build();
     }
 
     public static TaskBuilder builder() {
