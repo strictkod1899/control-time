@@ -2,6 +2,7 @@ package ru.strict.controltime.testdouble.stub.entity;
 
 import lombok.experimental.UtilityClass;
 import ru.strict.controltime.domain.entity.task.Message;
+import ru.strict.controltime.domain.entity.task.SleepDuration;
 import ru.strict.controltime.domain.entity.task.Task;
 import ru.strict.controltime.domain.entity.task.TaskBuilder;
 import ru.strict.controltime.domain.entity.task.TaskId;
@@ -30,7 +31,15 @@ public class TaskStub {
         return Task.builder().
                 id(getId()).
                 message(getMessage()).
-                sleepDuration(Duration.ofMinutes(30));
+                sleepDuration(getSleepDuration());
+    }
+
+    public SleepDuration getSleepDuration() {
+        return getSleepDurationFrom(Duration.ofMinutes(30));
+    }
+
+    public SleepDuration getSleepDurationFrom(Duration duration) {
+        return SleepDuration.from(duration);
     }
 
     public Message getMessage() {

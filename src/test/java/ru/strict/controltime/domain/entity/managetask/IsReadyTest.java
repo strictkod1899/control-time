@@ -24,7 +24,7 @@ class IsReadyTest {
 
     @Test
     void testIsReady_LastProcessedIsNull_DurationIsExpired_ReturnTrue() {
-        var givenDuration = Duration.ofMinutes(20);
+        var givenDuration = TaskStub.getSleepDurationFrom(Duration.ofMinutes(20));
         var givenStartedAt = Instant.now().minus(givenDuration.toMinutes()+1, ChronoUnit.MINUTES);
 
         var task = TaskStub.getTaskBuilder().sleepDuration(givenDuration).build();
@@ -39,7 +39,7 @@ class IsReadyTest {
 
     @Test
     void testIsReady_LastProcessedNotNull_DurationIsActive_ReturnFalse() {
-        var givenDuration = Duration.ofMinutes(20);
+        var givenDuration = TaskStub.getSleepDurationFrom(Duration.ofMinutes(20));
         var givenStartedAt = Instant.now().minus(givenDuration.toMinutes()+5, ChronoUnit.MINUTES);
         var givenLastProcessedAt = givenStartedAt.plus(givenDuration.toMinutes(), ChronoUnit.MINUTES);
 
@@ -56,7 +56,7 @@ class IsReadyTest {
 
     @Test
     void testIsReady_LastProcessedNotNull_DurationIsExpired_ReturnTrue() {
-        var givenDuration = Duration.ofMinutes(20);
+        var givenDuration = TaskStub.getSleepDurationFrom(Duration.ofMinutes(20));
         var givenStartedAt = Instant.now().minus(givenDuration.toMinutes()*2+5, ChronoUnit.MINUTES);
         var givenLastProcessedAt = givenStartedAt.plus(givenDuration.toMinutes()+1, ChronoUnit.MINUTES);
 

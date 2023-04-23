@@ -35,7 +35,7 @@ public class ManageTaskBuilder {
     }
 
     public ManageTask build() {
-        this.checkRequiredFields();
+        checkRequiredFields();
         if (errors.isPresent()) {
             throw errors.toException();
         }
@@ -45,11 +45,11 @@ public class ManageTaskBuilder {
 
     private void checkRequiredFields() {
         if (this.task == null) {
-            this.errors.addError(ManageTaskError.errTaskIsRequired());
+            errors.addError(ManageTaskError.errTaskIsRequired());
         }
 
         if (this.startedAt == null) {
-            this.errors.addError(ManageTaskError.errTaskStartedAtIsRequired());
+            errors.addError(ManageTaskError.errTaskStartedAtIsRequired());
         }
     }
 

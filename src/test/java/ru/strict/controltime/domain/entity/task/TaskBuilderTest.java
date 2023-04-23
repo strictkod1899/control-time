@@ -37,7 +37,7 @@ class TaskBuilderTest {
     void testBuild_AllValidParams_ReturnTask() {
         var expectedTaskId = TaskStub.getId();
         var expectedMessage = TaskStub.getMessage();
-        var expectedSleepDuration = Duration.ofMinutes(30);
+        var expectedSleepDuration = TaskStub.getSleepDuration();
 
         var task = Task.builder().
                 id(expectedTaskId).

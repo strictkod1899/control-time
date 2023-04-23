@@ -16,9 +16,9 @@ import java.util.Optional;
 public class Task {
     TaskId id;
     Message message;
-    Duration sleepDuration;
+    SleepDuration sleepDuration;
 
-    public static Task init(Message message, Duration sleepDuration) {
+    public static Task init(Message message, SleepDuration sleepDuration) {
         var errors = new Errors();
         if (message == null) {
             errors.addError(TaskError.errMessageIsRequired());

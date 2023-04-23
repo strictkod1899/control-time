@@ -5,12 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import ru.strict.validate.CommonValidator;
 
-import java.util.Objects;
-
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Message {
-    private static final int MESSAGE_MAX_LENGTH = 30;
+    private static final int MAX_MESSAGE_LENGTH = 51;
 
     String value;
 
@@ -22,8 +20,8 @@ public class Message {
         if (CommonValidator.isNullOrEmpty(value)) {
             throw TaskError.errMessageIsEmpty();
         }
-        if (value.length() > MESSAGE_MAX_LENGTH) {
-            throw TaskError.errMessageTooLong();
+        if (value.length() > MAX_MESSAGE_LENGTH) {
+            throw TaskError.errMessageIsTooLong();
         }
         
         this.value = value;

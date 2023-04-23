@@ -2,10 +2,12 @@ package ru.strict.controltime.domain.entity.manager;
 
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.domain.entity.managetask.ManageTask;
 import ru.strict.controltime.domain.entity.managetask.ManageTasks;
 import ru.strict.controltime.domain.entity.task.Message;
+import ru.strict.controltime.domain.entity.task.SleepDuration;
 import ru.strict.controltime.domain.entity.task.Task;
 import ru.strict.controltime.domain.entity.task.TaskId;
 
@@ -15,8 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
 @EqualsAndHashCode
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PACKAGE)
 public class TimeManager {
     TimeManagerId id;
     ManageTasks manageTasks;
@@ -43,13 +46,12 @@ public class TimeManager {
         return timeManager;
     }
 
-    public void addTask(Message message, Duration sleepDuration) {
-        var task = Task.init(message, sleepDuration);
-        this.manageTasks.addTask(task);
+    public void addTask(Task task) {
+        manageTasks.addTask(task);
     }
 
     public void deleteTask(TaskId taskId) {
-        this.manageTasks.deleteTask(taskId);
+        manageTasks.deleteTask(taskId);
     }
 
     public List<TaskId> getReadyTaskIds() {
@@ -60,13 +62,13 @@ public class TimeManager {
     }
 
     public Optional<Message> getTaskMessage(TaskId taskId) {
-        return this.manageTasks.getManageTaskById(taskId).
+        return manageTasks.getManageTaskById(taskId).
                 map(ManageTask::getTask).
                 map(Task::getMessage);
     }
 
     public void markTaskAsProcessed(TaskId taskId) {
-        var taskOptional = this.manageTasks.getManageTaskById(taskId);
+        var taskOptional = manageTasks.getManageTaskById(taskId);
 
         var task = taskOptional.orElseThrow(() -> TimeManagerError.errTaskNotFound(taskId));
 
@@ -79,9 +81,5 @@ public class TimeManager {
 
     public List<Task> getTasks() {
         return manageTasks.getTasks();
-    }
-
-    public TimeManagerId getId() {
-        return this.id;
     }
 }

@@ -42,7 +42,7 @@ class MessageTest {
         try {
             Message.from("testmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessagetestmessage");
         } catch (CodeableException ex) {
-            assertTrue(CodeableException.equalsByCode(ex, TaskError.messageTooLongErrorCode));
+            assertTrue(CodeableException.equalsByCode(ex, TaskError.messageIsTooLongErrorCode));
             return;
         }
 

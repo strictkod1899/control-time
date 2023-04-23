@@ -36,7 +36,7 @@ public class ManageTask {
 
     public boolean isReady() {
         var lastStartedAt = getLastProcessedAt().orElse(startedAt);
-        var requiredEndSleep = lastStartedAt.plus(this.task.getSleepDuration());
+        var requiredEndSleep = lastStartedAt.plusNanos(task.getSleepDuration().toNanos());
 
         return requiredEndSleep.isBefore(Instant.now());
     }

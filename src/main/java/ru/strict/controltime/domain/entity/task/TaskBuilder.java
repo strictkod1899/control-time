@@ -10,7 +10,7 @@ import java.time.Duration;
 public class TaskBuilder {
     TaskId id;
     Message message;
-    Duration sleepDuration;
+    SleepDuration sleepDuration;
 
     Errors errors;
 
@@ -28,13 +28,13 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder sleepDuration(Duration sleepDuration) {
+    public TaskBuilder sleepDuration(SleepDuration sleepDuration) {
         this.sleepDuration = sleepDuration;
         return this;
     }
 
     public Task build() {
-        this.checkRequiredFields();
+        checkRequiredFields();
         if (errors.isPresent()) {
             throw errors.toException();
         }
@@ -44,15 +44,15 @@ public class TaskBuilder {
 
     private void checkRequiredFields() {
         if (this.id == null) {
-            this.errors.addError(TaskError.errTaskIdIsRequired());
+            errors.addError(TaskError.errTaskIdIsRequired());
         }
 
         if (this.message == null) {
-            this.errors.addError(TaskError.errMessageIsRequired());
+            errors.addError(TaskError.errMessageIsRequired());
         }
 
         if (this.sleepDuration == null) {
-            this.errors.addError(TaskError.errSleepDurationIsRequired());
+            errors.addError(TaskError.errSleepDurationIsRequired());
         }
     }
 

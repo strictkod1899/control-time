@@ -6,12 +6,23 @@ import ru.strict.exception.CodeableException;
 
 @UtilityClass
 public class TimeManagerUseCaseError {
-    public final String createTaskParamsListIsRequiredErrorCode = "c0962dd2-001";
+    public final String taskRepositoryIsRequiredErrorCode = "SYS";
+    public final String notificationPresenterIsRequiredErrorCode = "SYS";
+
+    public final String createTaskParamIsRequiredErrorCode = "c0962dd2-001";
     public final String taskManagerAlreadyInitializedErrorCode = "c0962dd2-002";
     public final String taskManagerIsNotInitializedErrorCode = "c0962dd2-003";
 
-    public CodeableException errCreateTaskParamsListIsRequired() {
-        return new CodeableException(createTaskParamsListIsRequiredErrorCode, "CreateTaskParamsList is required");
+    public CodeableException errTaskRepositoryIsRequired() {
+        return new CodeableException(taskRepositoryIsRequiredErrorCode, "taskRepository is required");
+    }
+
+    public CodeableException errNotificationPresenterIsRequired() {
+        return new CodeableException(notificationPresenterIsRequiredErrorCode, "notificationPresenter is required");
+    }
+
+    public CodeableException errCreateTaskParamIsRequired() {
+        return new CodeableException(createTaskParamIsRequiredErrorCode, "CreateTaskParam is required");
     }
 
     public CodeableException errTaskManagerAlreadyInitialized() {

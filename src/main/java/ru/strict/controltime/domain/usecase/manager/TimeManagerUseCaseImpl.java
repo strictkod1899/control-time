@@ -3,39 +3,37 @@ package ru.strict.controltime.domain.usecase.manager;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.boundary.model.CreateTaskParams;
+import ru.strict.controltime.boundary.presenter.NotificationPresenter;
+import ru.strict.controltime.boundary.repository.TaskRepository;
+import ru.strict.controltime.boundary.usecase.TimeManagerProcessUseCase;
 import ru.strict.controltime.boundary.usecase.TimeManagerUseCase;
 import ru.strict.controltime.domain.entity.manager.TimeManager;
 import ru.strict.controltime.domain.entity.task.Message;
+import ru.strict.controltime.domain.entity.task.SleepDuration;
 import ru.strict.controltime.domain.entity.task.Task;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.Duration;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
+@FieldDefaults(level = AccessLevel.PACKAGE)
+public class TimeManagerUseCaseImpl implements TimeManagerUseCase, TimeManagerProcessUseCase {
+
+    TaskRepository taskRepository;
+    NotificationPresenter notificationPresenter;
 
     TimeManager timeManager;
 
     @Override
-    public void initTimeManager(List<CreateTaskParams> tasksParams) {
-        if (tasksParams == null) {
-            throw TimeManagerUseCaseError.errCreateTaskParamsListIsRequired();
-        }
-
-        var newTasks = tasksParams.stream().
-                map(this::createTask).
-                collect(Collectors.toList());
-
-        if (TimeManagerSingleton.isInitialized()) {
-            timeManager = TimeManagerSingleton.getInstance();
-        } else {
-            timeManager = TimeManagerSingleton.init(newTasks);
-        }
-    }
-
-    @Override
     public void addTask(CreateTaskParams createTaskParams) {
-        throw new UnsupportedOperationException("impl me");
+        if (createTaskParams == null) {
+            throw TimeManagerUseCaseError.errCreateTaskParamIsRequired();
+        }
+
+        var taskMessage = Message.from(createTaskParams.getMessage());
+        var sleepDuration = SleepDuration.from(createTaskParams.getSleepDuration());
+        var task = Task.init(taskMessage, sleepDuration);
+
+        taskRepository.insert(task);
+        timeManager.addTask(task);
     }
 
     @Override
@@ -44,23 +42,11 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
     }
 
     @Override
-    public List<String> getReadyTaskIds() {
+    public void processReadyTasks() {
         throw new UnsupportedOperationException("impl me");
     }
 
-    @Override
-    public String getTaskMessage(String taskId) {
-        throw new UnsupportedOperationException("impl me");
-    }
-
-    @Override
-    public void markTaskAsProcessed(String taskId) {
-        throw new UnsupportedOperationException("impl me");
-    }
-
-    private Task createTask(CreateTaskParams taskParams) {
-        var message = Message.from(taskParams.getMessage());
-
-        return Task.init(message, taskParams.getSleepDuration());
+    public static TimeManagerUseCaseBuilder builder() {
+        return new TimeManagerUseCaseBuilder();
     }
 }
