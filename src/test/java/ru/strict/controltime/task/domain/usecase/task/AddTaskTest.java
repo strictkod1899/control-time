@@ -15,11 +15,11 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AddTaskTest extends TaskUseCaseCommon {
+class AddTaskTest extends TaskUseCaseTestCommon {
 
     @BeforeEach
     public void setupTest() {
-        setUpUseCase();
+        setupUseCase();
     }
 
     @Test

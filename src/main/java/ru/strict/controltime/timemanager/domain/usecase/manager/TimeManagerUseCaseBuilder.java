@@ -1,10 +1,13 @@
 package ru.strict.controltime.timemanager.domain.usecase.manager;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
 import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
 import ru.strict.exception.Errors;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TimeManagerUseCaseBuilder {
     NotificationPresenter notificationPresenter;
     TimeManagerRepository timeManagerRepository;

@@ -14,11 +14,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class DeleteTaskTest extends TaskUseCaseCommon {
+class DeleteTaskTest extends TaskUseCaseTestCommon {
 
     @BeforeEach
     public void setupTest() {
-        setUpUseCase();
+        setupUseCase();
     }
 
     @Test

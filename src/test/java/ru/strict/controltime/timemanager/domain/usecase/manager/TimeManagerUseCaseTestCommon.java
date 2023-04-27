@@ -14,13 +14,13 @@ import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
-class TimeManagerUseCaseCommon {
+class TimeManagerUseCaseTestCommon {
     TimeManagerRepository timeManagerRepositoryMock;
     NotificationPresenter notificationPresenterMock;
     TaskRepository taskRepositoryMock;
     TimeManagerUseCase timeManagerUseCase;
 
-    void setUpUseCase() {
+    void setupUseCase() {
         timeManagerRepositoryMock = mock(TimeManagerRepository.class, MockitoUtil.STRICT_BEHAVIOUR);
         notificationPresenterMock = mock(NotificationPresenter.class, MockitoUtil.STRICT_BEHAVIOUR);
         taskRepositoryMock = mock(TaskRepository.class, MockitoUtil.STRICT_BEHAVIOUR);

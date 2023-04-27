@@ -11,11 +11,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class ProcessReadyTasksTest extends TimeManagerUseCaseCommon {
+class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
 
     @BeforeEach
     public void setupTest() {
-        setUpUseCase();
+        setupUseCase();
     }
 
     @Test

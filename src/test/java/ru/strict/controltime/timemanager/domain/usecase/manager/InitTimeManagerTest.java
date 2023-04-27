@@ -14,11 +14,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class InitTimeManagerTest extends TimeManagerUseCaseCommon {
+class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
 
     @BeforeEach
     public void setupTest() {
-        setUpUseCase();
+        setupUseCase();
     }
 
     @Test

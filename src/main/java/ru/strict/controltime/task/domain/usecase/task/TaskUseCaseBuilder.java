@@ -1,9 +1,12 @@
 package ru.strict.controltime.task.domain.usecase.task;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.task.boundary.event.TaskEventPublisher;
 import ru.strict.controltime.task.boundary.repository.TaskRepository;
 import ru.strict.exception.Errors;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskUseCaseBuilder {
     TaskRepository taskRepository;
     TaskEventPublisher taskEventPublisher;

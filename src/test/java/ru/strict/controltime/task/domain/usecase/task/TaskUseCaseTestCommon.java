@@ -13,12 +13,12 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
-class TaskUseCaseCommon {
+class TaskUseCaseTestCommon {
     TaskRepository taskRepositoryMock;
     TaskEventPublisher taskEventPublisherMock;
     TaskUseCase taskUseCase;
 
-    void setUpUseCase() {
+    void setupUseCase() {
         taskRepositoryMock = mock(TaskRepository.class, MockitoUtil.STRICT_BEHAVIOUR);
         taskEventPublisherMock = mock(TaskEventPublisher.class, MockitoUtil.STRICT_BEHAVIOUR);
 
