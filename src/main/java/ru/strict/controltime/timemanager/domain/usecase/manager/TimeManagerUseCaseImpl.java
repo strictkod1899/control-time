@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.task.domain.entity.task.Message;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
+import ru.strict.controltime.timemanager.boundary.presenter.TimeManagerPresenter;
 import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
 import ru.strict.controltime.timemanager.boundary.usecase.TimeManagerUseCase;
@@ -13,9 +14,10 @@ import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
 
-    NotificationPresenter notificationPresenter;
     TimeManagerRepository timeManagerRepository;
     TaskRepository taskRepository;
+    NotificationPresenter notificationPresenter;
+    TimeManagerPresenter timeManagerPresenter;
 
     @Override
     public void initTimeManager() {
@@ -28,6 +30,7 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
         var tasks = taskRepository.getAllTasks();
         var newTimeManager = TimeManager.init(tasks);
         timeManagerRepository.setActiveManager(newTimeManager);
+        timeManagerPresenter.refreshTimeManager();
     }
 
     @Override

@@ -1,18 +1,17 @@
-package ru.strict.controltime.timemanager.domain.usecase.manager;
+package ru.strict.controltime.timemanager.domain.usecase.task.event.handler;
 
 import lombok.experimental.UtilityClass;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.exception.CodeableException;
 
 @UtilityClass
-public class TimeManagerUseCaseError {
+public class TaskHandlerError {
     public final String timeManagerRepositoryIsRequiredErrorCode = "SYS";
     public final String taskRepositoryIsRequiredErrorCode = "SYS";
-    public final String notificationPresenterIsRequiredErrorCode = "SYS";
     public final String timeManagerPresenterIsRequiredErrorCode = "SYS";
 
-    public final String activeTimeManagerNotFoundErrorCode = "8e022e17-001";
-    public final String readyTaskNotFoundErrorCode = "8e022e17-002";
+    public final String taskNotFoundErrorCode = "fa755e9e-001";
+    public final String activeTimeManagerNotFoundErrorCode = "fa755e9e-002";
 
     public CodeableException errTimeManagerRepositoryIsRequired() {
         return new CodeableException(timeManagerRepositoryIsRequiredErrorCode, "timeManagerRepository is required");
@@ -22,20 +21,16 @@ public class TimeManagerUseCaseError {
         return new CodeableException(taskRepositoryIsRequiredErrorCode, "taskRepository is required");
     }
 
-    public CodeableException errNotificationPresenterIsRequired() {
-        return new CodeableException(notificationPresenterIsRequiredErrorCode, "notificationPresenter is required");
-    }
-
     public CodeableException errTimeManagerPresenterIsRequired() {
         return new CodeableException(timeManagerPresenterIsRequiredErrorCode, "timeManagerPresenter is required");
     }
 
-    public CodeableException errActiveTimeManagerNotFound() {
-        return new CodeableException(activeTimeManagerNotFoundErrorCode, "active TimeManager not found");
+    public CodeableException errTaskNotFoundById(TaskId taskId) {
+        var errMsg = String.format("task by id = '%s' not found", taskId);
+        return new CodeableException(taskNotFoundErrorCode, errMsg);
     }
 
-    public CodeableException errReadyTaskNotFoundById(TaskId taskId) {
-        var errMsg = String.format("ready task by id = '%s' not found", taskId);
-        return new CodeableException(readyTaskNotFoundErrorCode, errMsg);
+    public CodeableException errActiveTimeManagerNotFound() {
+        return new CodeableException(activeTimeManagerNotFoundErrorCode, "active timeManager not found");
     }
 }

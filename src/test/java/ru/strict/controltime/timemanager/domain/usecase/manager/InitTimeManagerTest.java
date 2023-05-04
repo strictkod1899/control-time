@@ -33,6 +33,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
         verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -45,6 +46,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
         verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -60,6 +62,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verify(taskRepositoryMock, only()).getAllTasks();
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -77,6 +80,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock).setActiveManager(any());
         verify(taskRepositoryMock, only()).getAllTasks();
         verifyNoInteractions(notificationPresenterMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -85,6 +89,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         doReturn(Optional.empty()).when(timeManagerRepositoryMock).getActiveManager();
         doReturn(expectedTasks).when(taskRepositoryMock).getAllTasks();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(any());
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager();
 
         timeManagerUseCase.initTimeManager();
 
