@@ -13,7 +13,6 @@ import ru.strict.test.MockitoUtil;
 
 import static org.mockito.Mockito.mock;
 
-@ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
 class TimeManagerUseCaseTestCommon {
     TimeManagerRepository timeManagerRepositoryMock;
