@@ -30,7 +30,7 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
         var tasks = taskRepository.getAllTasks();
         var newTimeManager = TimeManager.init(tasks);
         timeManagerRepository.setActiveManager(newTimeManager);
-        timeManagerPresenter.refreshTimeManager();
+        timeManagerPresenter.refreshTimeManager(newTimeManager);
     }
 
     @Override

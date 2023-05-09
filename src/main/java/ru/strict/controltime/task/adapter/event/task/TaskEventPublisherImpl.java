@@ -9,8 +9,12 @@ import ru.strict.controltime.common.task.boundary.model.TaskEvent;
 
 public class TaskEventPublisherImpl extends EventPublisher<TaskEvent> implements TaskEventPublisher {
 
-    public TaskEventPublisherImpl(EventBroker<TaskEvent> eventBroker) {
+    private TaskEventPublisherImpl(EventBroker<TaskEvent> eventBroker) {
         super(eventBroker);
+    }
+
+    public static TaskEventPublisherImpl from(EventBroker<TaskEvent> eventBroker) {
+        return new TaskEventPublisherImpl(eventBroker);
     }
 
     @Override

@@ -89,7 +89,7 @@ class InitTimeManagerTest extends TimeManagerUseCaseTestCommon {
         doReturn(Optional.empty()).when(timeManagerRepositoryMock).getActiveManager();
         doReturn(expectedTasks).when(taskRepositoryMock).getAllTasks();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(any());
-        doNothing().when(timeManagerPresenterMock).refreshTimeManager();
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager(any());
 
         timeManagerUseCase.initTimeManager();
 

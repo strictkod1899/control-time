@@ -31,7 +31,7 @@ public class AddTaskHandler implements TaskEventHandler {
         timeManager.addTask(task);
 
         timeManagerRepository.setActiveManager(timeManager);
-        timeManagerPresenter.refreshTimeManager();
+        timeManagerPresenter.refreshTimeManager(timeManager);
     }
 
     public static AddTaskHandlerBuilder builder() {

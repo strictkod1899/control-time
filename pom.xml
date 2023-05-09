@@ -37,6 +37,10 @@
         </dependency>
         <dependency>
             <groupId>ru.strict</groupId>
+            <artifactId>jview</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.strict</groupId>
             <artifactId>ioc</artifactId>
         </dependency>
 

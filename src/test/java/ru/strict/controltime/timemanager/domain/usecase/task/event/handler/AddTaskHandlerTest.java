@@ -139,7 +139,7 @@ class AddTaskHandlerTest {
         doReturn(Optional.ofNullable(givenTask)).when(taskRepositoryMock).getById(any());
         doReturn(Optional.ofNullable(givenTimeManager)).when(timeManagerRepositoryMock).getActiveManager();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(eq(givenTimeManager));
-        doNothing().when(timeManagerPresenterMock).refreshTimeManager();
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager(any());
 
         var givenEvent = TaskEvent.builder().
                 action(TaskEventAction.CREATED.getAction()).
@@ -151,6 +151,6 @@ class AddTaskHandlerTest {
         verify(taskRepositoryMock, only()).getById(any());
         verify(timeManagerRepositoryMock).getActiveManager();
         verify(timeManagerRepositoryMock).setActiveManager(eq(givenTimeManager));
-        verify(timeManagerPresenterMock).refreshTimeManager();
+        verify(timeManagerPresenterMock).refreshTimeManager(any());
     }
 }
