@@ -32,6 +32,14 @@ public class SleepDuration {
         return value.toMinutes();
     }
 
+    public Duration toDuration() {
+        return value;
+    }
+
+    public long toMillis() {
+        return value.toMillis();
+    }
+
     public long toNanos() {
         return value.toNanos();
     }

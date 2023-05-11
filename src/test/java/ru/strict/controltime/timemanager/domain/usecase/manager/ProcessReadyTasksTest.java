@@ -29,6 +29,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
         verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -41,6 +42,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verifyNoInteractions(notificationPresenterMock);
         verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -48,6 +50,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         var givenTimeManager = TimeManagerStub.getEmptyTimeManager();
         doReturn(Optional.of(givenTimeManager)).when(timeManagerRepositoryMock).getActiveManager();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(any());
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager(any());
 
         timeManagerUseCase.processReadyTasks();
 
@@ -62,6 +65,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         var givenTimeManager = TimeManagerStub.getTimeManagerWithoutReadyTasks();
         doReturn(Optional.of(givenTimeManager)).when(timeManagerRepositoryMock).getActiveManager();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(any());
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager(any());
 
         timeManagerUseCase.processReadyTasks();
 
@@ -72,7 +76,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
     }
 
     @Test
-    void testProcess_WithReadyTasks_PresenterError_ThrowException() {
+    void testProcess_WithReadyTasks_NotificationPresenterError_ThrowException() {
         var expectedEx = ExceptionStub.getException();
         doThrow(expectedEx).when(notificationPresenterMock).showMessage(any());
 
@@ -85,6 +89,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         verify(timeManagerRepositoryMock, only()).getActiveManager();
         verify(notificationPresenterMock, only()).showMessage(any());
         verifyNoInteractions(taskRepositoryMock);
+        verifyNoInteractions(timeManagerPresenterMock);
     }
 
     @Test
@@ -92,6 +97,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         var expectedTimeManager = TimeManagerStub.getFullTimeManager();
         doReturn(Optional.of(expectedTimeManager)).when(timeManagerRepositoryMock).getActiveManager();
         doNothing().when(timeManagerRepositoryMock).setActiveManager(any());
+        doNothing().when(timeManagerPresenterMock).refreshTimeManager(any());
 
         var expectedReadyTasks = expectedTimeManager.getReadyTaskIds();
         var expectedReadyTasksCount = expectedReadyTasks.size();

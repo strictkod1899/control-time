@@ -30,7 +30,13 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
         var tasks = taskRepository.getAllTasks();
         var newTimeManager = TimeManager.init(tasks);
         timeManagerRepository.setActiveManager(newTimeManager);
-        timeManagerPresenter.refreshTimeManager(newTimeManager);
+        timeManagerPresenter.showTimeManager(newTimeManager);
+    }
+
+    @Override
+    public TimeManager getActiveTimeManager() {
+        return timeManagerRepository.getActiveManager().
+                orElseThrow(TimeManagerUseCaseError::errActiveTimeManagerNotFound);
     }
 
     @Override
@@ -42,6 +48,7 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
                 forEach(readyTaskId -> processReadyTask(timeManager, readyTaskId));
 
         timeManagerRepository.setActiveManager(timeManager);
+        timeManagerPresenter.refreshTimeManager(timeManager);
     }
 
     public static TimeManagerUseCaseBuilder builder() {

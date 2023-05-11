@@ -2,6 +2,7 @@ package ru.strict.controltime.initservice;
 
 import ru.strict.controltime.timemanager.adapter.presenter.notification.NotificationPresenterImpl;
 import ru.strict.controltime.timemanager.adapter.presenter.timemanager.TimeManagerPresenterImpl;
+import ru.strict.controltime.view.manager.TimeManagerViewController;
 import ru.strict.ioc.annotation.Component;
 
 public class PresentersInit {
@@ -12,7 +13,9 @@ public class PresentersInit {
     }
 
     @Component
-    public TimeManagerPresenterImpl timeManagerPresenter() {
-        return TimeManagerPresenterImpl.init();
+    public TimeManagerPresenterImpl timeManagerPresenter(
+            TimeManagerViewController timeManagerViewController
+    ) {
+        return TimeManagerPresenterImpl.from(timeManagerViewController);
     }
 }
