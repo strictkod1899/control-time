@@ -59,10 +59,9 @@ public class TimeManager {
                 collect(Collectors.toList());
     }
 
-    public Optional<Message> getTaskMessage(TaskId taskId) {
+    public Optional<Task> getTask(TaskId taskId) {
         return manageTasks.getManageTaskById(taskId).
-                map(ManageTask::getTask).
-                map(Task::getMessage);
+                map(ManageTask::getTask);
     }
 
     public void markTaskAsProcessed(TaskId taskId) {

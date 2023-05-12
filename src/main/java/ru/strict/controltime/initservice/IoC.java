@@ -16,6 +16,7 @@ import ru.strict.controltime.timemanager.domain.usecase.task.event.handler.AddTa
 import ru.strict.controltime.view.manager.TimeManagerViewController;
 import ru.strict.controltime.view.manager.scheduler.ComputerWorkDurationScheduler;
 import ru.strict.controltime.view.manager.scheduler.RefreshTimeManagerScheduler;
+import ru.strict.controltime.view.notification.NotificationViewController;
 import ru.strict.event.EventBus;
 import ru.strict.file.json.JacksonObjectMapper;
 import ru.strict.ioc.InstanceType;
@@ -53,6 +54,7 @@ public class IoC extends SingletonIoC {
         addComponent(AddTaskHandler.class);
         addComponent(TimeManagerInnerController.class);
         addComponent(TimeManagerViewController.class);
+        addComponent(NotificationViewController.class);
         addComponent(ComputerWorkDurationScheduler.class);
         addComponent(RefreshTimeManagerScheduler.class);
         addComponent(ProcessTasksScheduler.class);

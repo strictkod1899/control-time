@@ -43,6 +43,6 @@ class DeleteTaskTest {
 
         timeManager.deleteTask(taskForRemove.getId());
 
-        assertFalse(timeManager.getTaskMessage(taskForRemove.getId()).isPresent());
+        assertFalse(timeManager.getTask(taskForRemove.getId()).isPresent());
     }
 }

@@ -1,7 +1,7 @@
 package ru.strict.controltime.timemanager.boundary.presenter;
 
-import ru.strict.controltime.task.domain.entity.task.Message;
+import ru.strict.controltime.task.domain.entity.task.Task;
 
 public interface NotificationPresenter {
-    void showMessage(Message message);
+    void showNotification(Task task);
 }

@@ -2,7 +2,6 @@ package ru.strict.controltime.timemanager.domain.usecase.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.task.domain.entity.task.Message;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
 import ru.strict.controltime.timemanager.boundary.presenter.TimeManagerPresenter;
@@ -69,12 +68,12 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
     }
 
     private void processReadyTask(TimeManager timeManager, TaskId readyTaskId) {
-        var messageOptional = timeManager.getTaskMessage(readyTaskId);
-        var message = messageOptional.orElseThrow(
+        var taskOptional = timeManager.getTask(readyTaskId);
+        var task = taskOptional.orElseThrow(
                 () -> TimeManagerUseCaseError.errReadyTaskNotFoundById(readyTaskId)
         );
 
-        notificationPresenter.showMessage(message);
+        notificationPresenter.showNotification(task);
         timeManager.markTaskAsProcessed(readyTaskId);
     }
 }

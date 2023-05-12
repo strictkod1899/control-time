@@ -78,7 +78,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
     @Test
     void testProcess_WithReadyTasks_NotificationPresenterError_ThrowException() {
         var expectedEx = ExceptionStub.getException();
-        doThrow(expectedEx).when(notificationPresenterMock).showMessage(any());
+        doThrow(expectedEx).when(notificationPresenterMock).showNotification(any());
 
         var givenTimeManager = TimeManagerStub.getFullTimeManager();
         doReturn(Optional.of(givenTimeManager)).when(timeManagerRepositoryMock).getActiveManager();
@@ -87,7 +87,7 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
 
         assertEquals(expectedEx, actualEx);
         verify(timeManagerRepositoryMock, only()).getActiveManager();
-        verify(notificationPresenterMock, only()).showMessage(any());
+        verify(notificationPresenterMock, only()).showNotification(any());
         verifyNoInteractions(taskRepositoryMock);
         verifyNoInteractions(timeManagerPresenterMock);
     }
@@ -102,15 +102,15 @@ class ProcessReadyTasksTest extends TimeManagerUseCaseTestCommon {
         var expectedReadyTasks = expectedTimeManager.getReadyTaskIds();
         var expectedReadyTasksCount = expectedReadyTasks.size();
         expectedReadyTasks.forEach(readyTaskId -> {
-            var expectedMessage = expectedTimeManager.getTaskMessage(readyTaskId).get();
-            doNothing().when(notificationPresenterMock).showMessage(eq(expectedMessage));
+            var expectedTask = expectedTimeManager.getTask(readyTaskId).get();
+            doNothing().when(notificationPresenterMock).showNotification(eq(expectedTask));
         });
 
         timeManagerUseCase.processReadyTasks();
 
         verify(timeManagerRepositoryMock).getActiveManager();
         verify(timeManagerRepositoryMock).setActiveManager(eq(expectedTimeManager));
-        verify(notificationPresenterMock, times(expectedReadyTasksCount)).showMessage(any());
+        verify(notificationPresenterMock, times(expectedReadyTasksCount)).showNotification(any());
         verifyNoInteractions(taskRepositoryMock);
     }
 }

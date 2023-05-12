@@ -17,11 +17,8 @@ public class TimeManagerViewController {
     public TimeManagerViewController(@Component("appPath") String appPath) {
         CommonValidator.throwIfNullOrEmpty(appPath, "appPath");
 
-        var model = new TimeManagerViewModel();
-        var view = new TimeManagerView(model, appPath);
-
-        this.model = model;
-        this.view = view;
+        this.model = new TimeManagerViewModel();
+        this.view = new TimeManagerView(model, appPath);
     }
 
     public void showTimeManager(TimeManager timeManager) {

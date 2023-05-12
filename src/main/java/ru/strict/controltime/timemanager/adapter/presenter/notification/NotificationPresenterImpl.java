@@ -1,16 +1,23 @@
 package ru.strict.controltime.timemanager.adapter.presenter.notification;
 
-import ru.strict.controltime.task.domain.entity.task.Message;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
-import ru.strict.view.swing.NotificationView;
+import ru.strict.controltime.view.notification.NotificationViewController;
+import ru.strict.view.swing.NotificationWindow;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class NotificationPresenterImpl implements NotificationPresenter {
 
-    public NotificationPresenterImpl() {}
+    NotificationViewController notificationViewController;
+
+    public NotificationPresenterImpl(NotificationViewController notificationViewController) {
+        this.notificationViewController = notificationViewController;
+    }
 
     @Override
-    public void showMessage(Message message) {
-        var notificationView = new NotificationView(message.toString());
-        notificationView.show();
+    public void showNotification(Task task) {
+        notificationViewController.showNotificationFromTask(task);
     }
 }
