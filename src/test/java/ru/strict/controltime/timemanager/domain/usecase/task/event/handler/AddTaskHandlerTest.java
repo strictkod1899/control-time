@@ -35,11 +35,9 @@ class AddTaskHandlerTest {
         taskRepositoryMock = mock(TaskRepository.class, MockitoUtil.STRICT_BEHAVIOUR);
         timeManagerPresenterMock = mock(TimeManagerPresenter.class, MockitoUtil.STRICT_BEHAVIOUR);
 
-        addTaskHandler = AddTaskHandler.builder().
-                timeManagerRepository(timeManagerRepositoryMock).
-                taskRepository(taskRepositoryMock).
-                timeManagerPresenter(timeManagerPresenterMock).
-                build();
+        addTaskHandler = new AddTaskHandler(taskRepositoryMock,
+                timeManagerRepositoryMock,
+                timeManagerPresenterMock);
     }
 
     @Test

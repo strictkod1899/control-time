@@ -12,11 +12,7 @@ public class TimeManagerInMemoryRepository implements TimeManagerRepository {
 
     volatile TimeManager activeTimeManager;
 
-    public static TimeManagerInMemoryRepository init() {
-        return new TimeManagerInMemoryRepository();
-    }
-
-    private TimeManagerInMemoryRepository(){}
+    public TimeManagerInMemoryRepository(){}
 
     @Override
     public synchronized void setActiveManager(TimeManager timeManager) {

@@ -3,6 +3,7 @@ package ru.strict.controltime.task.domain.usecase.task;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import ru.strict.controltime.common.task.domain.usecase.event.TaskEventUseCaseImpl;
 import ru.strict.controltime.task.boundary.event.TaskEventPublisher;
 import ru.strict.controltime.task.boundary.model.CreateTaskData;
 import ru.strict.controltime.task.boundary.repository.TaskRepository;
@@ -11,13 +12,24 @@ import ru.strict.controltime.task.domain.entity.task.Message;
 import ru.strict.controltime.task.domain.entity.task.SleepDuration;
 import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
+import ru.strict.validate.CommonValidator;
 
 @Slf4j
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TaskUseCaseImpl implements TaskUseCase {
 
     TaskRepository taskRepository;
     TaskEventPublisher taskEventPublisher;
+
+    public TaskUseCaseImpl(
+            TaskRepository taskRepository,
+            TaskEventPublisher taskEventPublisher) {
+        CommonValidator.throwIfNull(taskRepository, "taskRepository");
+        CommonValidator.throwIfNull(taskEventPublisher, "taskEventPublisher");
+
+        this.taskRepository = taskRepository;
+        this.taskEventPublisher = taskEventPublisher;
+    }
 
     @Override
     public void addTask(CreateTaskData createTaskData) {
@@ -55,9 +67,5 @@ public class TaskUseCaseImpl implements TaskUseCase {
         } catch (Exception ex) {
             log.error("fail publish event 'taskDeleted'", ex);
         }
-    }
-
-    public static TaskUseCaseBuilder builder() {
-        return new TaskUseCaseBuilder();
     }
 }

@@ -9,14 +9,16 @@ import ru.strict.controltime.task.boundary.repository.TaskRepository;
 import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.file.json.JacksonObjectMapper;
+import ru.strict.ioc.annotation.Component;
 import ru.strict.util.FileUtil;
+import ru.strict.validate.CommonValidator;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TaskJsonRepository implements
         TaskRepository,
         ru.strict.controltime.timemanager.boundary.repository.TaskRepository,
@@ -24,6 +26,16 @@ public class TaskJsonRepository implements
 
     JacksonObjectMapper jacksonObjectMapper;
     String filePath;
+
+    public TaskJsonRepository(
+            JacksonObjectMapper jacksonObjectMapper,
+            @Component("tasksFilePath") String filePath) {
+        CommonValidator.throwIfNull(jacksonObjectMapper, "jacksonObjectMapper");
+        CommonValidator.throwIfNullOrEmpty(filePath, "tasksFilePath");
+
+        this.jacksonObjectMapper = jacksonObjectMapper;
+        this.filePath = filePath;
+    }
 
     @Override
     public void init() {
@@ -47,7 +59,7 @@ public class TaskJsonRepository implements
         var taskIndexOptional = getTaskIndexById(tasksJson, taskId);
         var taskIndex = taskIndexOptional.orElseThrow(() -> TaskJsonRepositoryError.errTaskNotFoundById(taskId));
 
-        tasksJson.tasks.remove((int)taskIndex);
+        tasksJson.tasks.remove((int) taskIndex);
 
         jacksonObjectMapper.writeToFile(filePath, tasksJson);
     }
@@ -103,9 +115,5 @@ public class TaskJsonRepository implements
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    public static TaskJsonRepositoryBuilder builder() {
-        return new TaskJsonRepositoryBuilder();
     }
 }

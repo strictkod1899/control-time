@@ -15,22 +15,11 @@ import java.io.File;
 public class RepositoriesInit {
 
     @Component
-    public TaskJsonRepository taskJsonRepository(
+    public String tasksFilePath(
             EnvRegistry envRegistry,
-            JacksonObjectMapper jacksonObjectMapper,
             @Component("appPath") String appPath) {
         var tasksFileName = envRegistry.getEnv(EnvRegistryInit.tasksFileNameKey);
-        var tasksFilePath = appPath + File.separator + tasksFileName;
-
-        return TaskJsonRepository.builder().
-                jacksonObjectMapper(jacksonObjectMapper).
-                filePath(tasksFilePath).
-                build();
-    }
-
-    @Component
-    public TimeManagerInMemoryRepository timeManagerRepository() {
-        return TimeManagerInMemoryRepository.init();
+        return appPath + File.separator + tasksFileName;
     }
 
     @RequiredArgsConstructor

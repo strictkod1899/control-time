@@ -4,22 +4,16 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.timemanager.boundary.usecase.TimeManagerUseCase;
 import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
+import ru.strict.validate.CommonValidator;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeManagerInnerController {
     TimeManagerUseCase timeManagerUseCase;
 
-    private TimeManagerInnerController() {}
+    public TimeManagerInnerController(TimeManagerUseCase timeManagerUseCase) {
+        CommonValidator.throwIfNull(timeManagerUseCase, "timeManagerUseCase");
 
-    public static TimeManagerInnerController from(TimeManagerUseCase timeManagerUseCase) {
-        if (timeManagerUseCase == null) {
-            throw TimeManagerInnerControllerError.errTimeManagerUseCaseIsRequired();
-        }
-
-        var controller = new TimeManagerInnerController();
-        controller.timeManagerUseCase = timeManagerUseCase;
-
-        return controller;
+        this.timeManagerUseCase = timeManagerUseCase;
     }
 
     public void initTimeManager() {

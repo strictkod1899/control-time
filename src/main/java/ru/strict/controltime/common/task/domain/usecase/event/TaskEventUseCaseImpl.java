@@ -7,18 +7,18 @@ import ru.strict.controltime.common.task.boundary.model.TaskEvent;
 import ru.strict.controltime.common.task.boundary.model.TaskEventAction;
 import ru.strict.controltime.common.task.boundary.usecase.TaskEventUseCase;
 import ru.strict.controltime.common.task.domain.usecase.event.handler.TaskEventHandlerProvider;
+import ru.strict.validate.CommonValidator;
 
 @Slf4j
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TaskEventUseCaseImpl implements TaskEventUseCase {
 
     TaskEventHandlerProvider handlerProvider;
 
-    public static TaskEventUseCaseImpl init(TaskEventHandlerProvider handlerProvider) {
-        var useCase = new TaskEventUseCaseImpl();
-        useCase.handlerProvider = handlerProvider;
+    public TaskEventUseCaseImpl(TaskEventHandlerProvider handlerProvider) {
+        CommonValidator.throwIfNull(handlerProvider, "taskEventHandlerProvider");
 
-        return useCase;
+        this.handlerProvider = handlerProvider;
     }
 
     @Override

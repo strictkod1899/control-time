@@ -8,22 +8,15 @@ import ru.strict.view.boundary.View;
 
 import javax.annotation.Nonnull;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeManagerView implements View<TimeManagerViewState, TimeManagerViewModel> {
 
     TimeManagerViewModel model;
     TimeManagerWindow window;
 
-    private TimeManagerView() {}
-
-    public static TimeManagerView init(
-            TimeManagerViewModel model,
-            String appPath) {
-        var view = new TimeManagerView();
-        view.model = model;
-        view.window = TimeManagerWindow.init(appPath);
-
-        return view;
+    public TimeManagerView(TimeManagerViewModel model, String appPath) {
+        this.model = model;
+        this.window = new TimeManagerWindow(appPath);
     }
 
     @Override

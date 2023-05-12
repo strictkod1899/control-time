@@ -20,11 +20,7 @@ class InitTest {
         var tasksFilePath = Path.of(tasksFilePathStr);
         assertFalse(Files.exists(tasksFilePath));
 
-        var taskRepository = TaskJsonRepository.builder().
-                jacksonObjectMapper(new JacksonObjectMapper()).
-                filePath(tasksFilePathStr).
-                build();
-
+        var taskRepository = new TaskJsonRepository(new JacksonObjectMapper(), tasksFilePathStr);
         taskRepository.init();
 
         assertTrue(Files.exists(tasksFilePath));

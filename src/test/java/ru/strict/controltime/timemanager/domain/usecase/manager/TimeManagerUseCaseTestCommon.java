@@ -28,11 +28,10 @@ class TimeManagerUseCaseTestCommon {
         notificationPresenterMock = mock(NotificationPresenter.class, MockitoUtil.STRICT_BEHAVIOUR);
         timeManagerPresenterMock = mock(TimeManagerPresenter.class, MockitoUtil.STRICT_BEHAVIOUR);
 
-        timeManagerUseCase = TimeManagerUseCaseImpl.builder().
-                timeManagerRepository(timeManagerRepositoryMock).
-                taskRepository(taskRepositoryMock).
-                notificationPresenter(notificationPresenterMock).
-                timeManagerPresenter(timeManagerPresenterMock).
-                build();
+        timeManagerUseCase = new TimeManagerUseCaseImpl(
+                timeManagerRepositoryMock,
+                taskRepositoryMock,
+                notificationPresenterMock,
+                timeManagerPresenterMock);
     }
 }

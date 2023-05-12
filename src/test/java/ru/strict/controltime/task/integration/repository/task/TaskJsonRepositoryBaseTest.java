@@ -24,11 +24,7 @@ class TaskJsonRepositoryBaseTest {
     void setup() {
         tasksFilePath = ClassUtil.getFilePathByClass(TaskJsonRepositoryBaseTest.class, TASKS_FILE_NAME);
 
-        taskRepository = TaskJsonRepository.builder().
-                jacksonObjectMapper(new JacksonObjectMapper()).
-                filePath(tasksFilePath).
-                build();
-
+        taskRepository = new TaskJsonRepository(new JacksonObjectMapper(), tasksFilePath);
         taskRepository.init();
 
         prepareTestData();

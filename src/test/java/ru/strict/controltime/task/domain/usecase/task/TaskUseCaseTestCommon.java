@@ -22,9 +22,6 @@ class TaskUseCaseTestCommon {
         taskRepositoryMock = mock(TaskRepository.class, MockitoUtil.STRICT_BEHAVIOUR);
         taskEventPublisherMock = mock(TaskEventPublisher.class, MockitoUtil.STRICT_BEHAVIOUR);
 
-        taskUseCase = TaskUseCaseImpl.builder().
-                taskRepository(taskRepositoryMock).
-                taskEventPublisher(taskEventPublisherMock).
-                build();
+        taskUseCase = new TaskUseCaseImpl(taskRepositoryMock, taskEventPublisherMock);
     }
 }

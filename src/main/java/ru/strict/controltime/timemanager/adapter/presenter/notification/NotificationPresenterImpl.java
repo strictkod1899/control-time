@@ -6,11 +6,7 @@ import ru.strict.view.swing.NotificationView;
 
 public class NotificationPresenterImpl implements NotificationPresenter {
 
-    private NotificationPresenterImpl() {}
-
-    public static NotificationPresenterImpl init() {
-        return new NotificationPresenterImpl();
-    }
+    public NotificationPresenterImpl() {}
 
     @Override
     public void showMessage(Message message) {

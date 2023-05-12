@@ -10,14 +10,31 @@ import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
 import ru.strict.controltime.timemanager.boundary.usecase.TimeManagerUseCase;
 import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
+import ru.strict.validate.CommonValidator;
 
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
 
     TimeManagerRepository timeManagerRepository;
     TaskRepository taskRepository;
     NotificationPresenter notificationPresenter;
     TimeManagerPresenter timeManagerPresenter;
+
+    public TimeManagerUseCaseImpl(
+            TimeManagerRepository timeManagerRepository,
+            TaskRepository taskRepository,
+            NotificationPresenter notificationPresenter,
+            TimeManagerPresenter timeManagerPresenter) {
+        CommonValidator.throwIfNull(timeManagerRepository, "timeManagerRepository");
+        CommonValidator.throwIfNull(taskRepository, "taskRepository");
+        CommonValidator.throwIfNull(notificationPresenter, "notificationPresenter");
+        CommonValidator.throwIfNull(timeManagerPresenter, "timeManagerPresenter");
+
+        this.timeManagerRepository = timeManagerRepository;
+        this.taskRepository = taskRepository;
+        this.notificationPresenter = notificationPresenter;
+        this.timeManagerPresenter = timeManagerPresenter;
+    }
 
     @Override
     public void initTimeManager() {
@@ -49,10 +66,6 @@ public class TimeManagerUseCaseImpl implements TimeManagerUseCase {
 
         timeManagerRepository.setActiveManager(timeManager);
         timeManagerPresenter.refreshTimeManager(timeManager);
-    }
-
-    public static TimeManagerUseCaseBuilder builder() {
-        return new TimeManagerUseCaseBuilder();
     }
 
     private void processReadyTask(TimeManager timeManager, TaskId readyTaskId) {

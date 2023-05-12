@@ -15,7 +15,7 @@ class TimeManagerInMemoryRepositoryTest {
 
     @BeforeEach
     void setupTest() {
-        timeManagerRepository = TimeManagerInMemoryRepository.init();
+        timeManagerRepository = new TimeManagerInMemoryRepository();
     }
 
     @Test

@@ -6,20 +6,13 @@ import ru.strict.controltime.timemanager.boundary.presenter.TimeManagerPresenter
 import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
 import ru.strict.controltime.view.manager.TimeManagerViewController;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TimeManagerPresenterImpl implements TimeManagerPresenter {
 
     TimeManagerViewController timeManagerViewController;
 
-    private TimeManagerPresenterImpl() {}
-
-    public static TimeManagerPresenterImpl from(
-            TimeManagerViewController timeManagerViewController
-    ) {
-        var timeManagerPresenter = new TimeManagerPresenterImpl();
-        timeManagerPresenter.timeManagerViewController = timeManagerViewController;
-
-        return timeManagerPresenter;
+    public TimeManagerPresenterImpl(TimeManagerViewController timeManagerViewController) {
+        this.timeManagerViewController = timeManagerViewController;
     }
 
     @Override

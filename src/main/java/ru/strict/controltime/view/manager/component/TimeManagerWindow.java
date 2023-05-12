@@ -27,7 +27,7 @@ public class TimeManagerWindow {
     private static final Color backgroundColor = new Color(255, 255, 255);
     private static final String logoFileName = "logo.png";
 
-    String appPath;
+    final String appPath;
 
     JFrame frame;
     File logoFile;
@@ -35,15 +35,9 @@ public class TimeManagerWindow {
     Map<TaskId, TaskProgressBar> taskProgressBarsMap;
     JLabel computerWorkDurationLabel;
 
-    private TimeManagerWindow() {
-    }
-
-    public static TimeManagerWindow init(String appPath) {
-        var window = new TimeManagerWindow();
-        window.appPath = appPath;
-        window.taskProgressBarsMap = new HashMap<>();
-
-        return window;
+    public TimeManagerWindow(String appPath) {
+        this.appPath = appPath;
+        this.taskProgressBarsMap = new HashMap<>();
     }
 
     public void init(TimeManager timeManager) {

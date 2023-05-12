@@ -17,31 +17,6 @@ import ru.strict.ioc.annotation.Component;
 public class UseCasesInit {
 
     @Component
-    public TaskUseCaseImpl taskUseCase(
-            TaskRepository taskRepository,
-            TaskEventPublisher taskEventPublisher
-    ) {
-        return TaskUseCaseImpl.builder().
-                taskRepository(taskRepository).
-                taskEventPublisher(taskEventPublisher).
-                build();
-    }
-
-    @Component
-    public TimeManagerUseCaseImpl timeManagerUseCase(
-            ru.strict.controltime.timemanager.boundary.repository.TaskRepository taskRepository,
-            TimeManagerRepository timeManagerRepository,
-            NotificationPresenter notificationPresenter,
-            TimeManagerPresenter timeManagerPresenter) {
-        return TimeManagerUseCaseImpl.builder().
-                taskRepository(taskRepository).
-                timeManagerRepository(timeManagerRepository).
-                notificationPresenter(notificationPresenter).
-                timeManagerPresenter(timeManagerPresenter).
-                build();
-    }
-
-    @Component
     public TaskEventHandlerProvider taskEventHandlerProvider(
             AddTaskHandler addTaskHandler
     ) {
@@ -50,25 +25,5 @@ public class UseCasesInit {
         taskEventHandlerProvider.putSkippedAction(TaskEventAction.DELETED);
 
         return taskEventHandlerProvider;
-    }
-
-    @Component
-    public AddTaskHandler addTaskEventHandler(
-            ru.strict.controltime.timemanager.boundary.repository.TaskRepository taskRepository,
-            TimeManagerRepository timeManagerRepository,
-            TimeManagerPresenter timeManagerPresenter
-    ) {
-        return AddTaskHandler.builder().
-                taskRepository(taskRepository).
-                timeManagerRepository(timeManagerRepository).
-                timeManagerPresenter(timeManagerPresenter).
-                build();
-    }
-
-    @Component
-    public TaskEventUseCaseImpl taskEventUseCase(
-            TaskEventHandlerProvider taskEventHandlerProvider
-    ) {
-        return TaskEventUseCaseImpl.init(taskEventHandlerProvider);
     }
 }

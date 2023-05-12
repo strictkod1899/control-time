@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import ru.strict.controltime.timemanager.adapter.scheduler.manager.ProcessTasksScheduler;
 import ru.strict.controltime.view.manager.scheduler.ComputerWorkDurationScheduler;
 import ru.strict.controltime.view.manager.scheduler.RefreshTimeManagerScheduler;
 import ru.strict.ioc.annotation.Configuration;
@@ -16,6 +17,7 @@ public class SchedulerInit {
     public static class Start {
         ComputerWorkDurationScheduler computerWorkDurationScheduler;
         RefreshTimeManagerScheduler refreshTimeManagerScheduler;
+        ProcessTasksScheduler processTasksScheduler;
 
         // TODO: заменить нна worker pool
         @Configuration
@@ -23,7 +25,6 @@ public class SchedulerInit {
             new Thread(() -> {
                 while(true) {
                     try {
-                        Thread.currentThread();
                         Thread.sleep(1000L);
                     } catch (InterruptedException ex) {
                         log.error("ComputerWorkDurationScheduler error", ex);
@@ -41,7 +42,6 @@ public class SchedulerInit {
             new Thread(() -> {
                 while(true) {
                     try {
-                        Thread.currentThread();
                         Thread.sleep(1000L);
                     } catch (InterruptedException ex) {
                         log.error("RefreshTimeManagerScheduler error", ex);
@@ -49,6 +49,23 @@ public class SchedulerInit {
                     }
 
                     refreshTimeManagerScheduler.refreshTimeManager();
+                }
+            }).start();
+        }
+
+        // TODO: заменить нна worker pool
+        @Configuration
+        public void startProcessTasksScheduler() {
+            new Thread(() -> {
+                while(true) {
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException ex) {
+                        log.error("ProcessTasksScheduler error", ex);
+                        throw new RuntimeException(ex);
+                    }
+
+                    processTasksScheduler.processTasks();
                 }
             }).start();
         }

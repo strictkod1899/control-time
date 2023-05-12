@@ -6,15 +6,12 @@ import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.event.EventBroker;
 import ru.strict.event.EventPublisher;
 import ru.strict.controltime.common.task.boundary.model.TaskEvent;
+import ru.strict.ioc.annotation.Component;
 
 public class TaskEventPublisherImpl extends EventPublisher<TaskEvent> implements TaskEventPublisher {
 
-    private TaskEventPublisherImpl(EventBroker<TaskEvent> eventBroker) {
+    public TaskEventPublisherImpl(@Component("taskEventBus") EventBroker<TaskEvent> eventBroker) {
         super(eventBroker);
-    }
-
-    public static TaskEventPublisherImpl from(EventBroker<TaskEvent> eventBroker) {
-        return new TaskEventPublisherImpl(eventBroker);
     }
 
     @Override

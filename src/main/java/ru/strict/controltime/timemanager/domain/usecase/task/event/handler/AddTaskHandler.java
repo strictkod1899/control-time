@@ -9,14 +9,28 @@ import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.controltime.timemanager.boundary.presenter.TimeManagerPresenter;
 import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.boundary.repository.TimeManagerRepository;
+import ru.strict.validate.CommonValidator;
 
 @Slf4j
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AddTaskHandler implements TaskEventHandler {
 
     TaskRepository taskRepository;
     TimeManagerRepository timeManagerRepository;
     TimeManagerPresenter timeManagerPresenter;
+
+    public AddTaskHandler(
+            TaskRepository taskRepository,
+            TimeManagerRepository timeManagerRepository,
+            TimeManagerPresenter timeManagerPresenter) {
+        CommonValidator.throwIfNull(taskRepository, "taskRepository");
+        CommonValidator.throwIfNull(timeManagerRepository, "timeManagerRepository");
+        CommonValidator.throwIfNull(timeManagerPresenter, "timeManagerPresenter");
+
+        this.taskRepository = taskRepository;
+        this.timeManagerRepository = timeManagerRepository;
+        this.timeManagerPresenter = timeManagerPresenter;
+    }
 
     @Override
     public void handle(TaskEvent event) {
@@ -32,9 +46,5 @@ public class AddTaskHandler implements TaskEventHandler {
 
         timeManagerRepository.setActiveManager(timeManager);
         timeManagerPresenter.refreshTimeManager(timeManager);
-    }
-
-    public static AddTaskHandlerBuilder builder() {
-        return new AddTaskHandlerBuilder();
     }
 }
