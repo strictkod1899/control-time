@@ -42,8 +42,12 @@ public class NotificationView implements View<NotificationViewState, Notificatio
 
         var task = model.getCurrentTaskForNotify();
         var notificationWindow = new NotificationWindow(task.getMessage().toString());
+        notificationWindow.addCustomCloseButtonAction((e) -> {
+            model.removeActiveTaskNotification(task.getId());
+        });
         notificationWindow.show();
 
+        model.addActiveTaskNotification(task.getId());
         model.setCurrentTaskForNotify(null);
         model.resetState();
     }

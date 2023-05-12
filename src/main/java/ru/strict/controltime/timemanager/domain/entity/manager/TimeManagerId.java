@@ -1,7 +1,9 @@
 package ru.strict.controltime.timemanager.domain.entity.manager;
 
+import lombok.EqualsAndHashCode;
 import ru.strict.domainprimitive.id.EntityId;
 
+@EqualsAndHashCode(callSuper = true)
 public class TimeManagerId extends EntityId {
 
     private TimeManagerId(){

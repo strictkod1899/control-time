@@ -1,7 +1,9 @@
 package ru.strict.controltime.task.domain.entity.task;
 
+import lombok.EqualsAndHashCode;
 import ru.strict.domainprimitive.id.EntityId;
 
+@EqualsAndHashCode(callSuper = true)
 public class TaskId extends EntityId {
 
     private TaskId(){

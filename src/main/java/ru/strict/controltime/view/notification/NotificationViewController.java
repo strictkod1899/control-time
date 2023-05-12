@@ -16,6 +16,10 @@ public class NotificationViewController {
     }
 
     public void showNotificationFromTask(Task task) {
+        if (model.isActiveTaskNotification(task.getId())) {
+            return;
+        }
+
         model.setCurrentTaskForNotify(task);
         view.refresh(NotificationViewState.showNotification);
     }
