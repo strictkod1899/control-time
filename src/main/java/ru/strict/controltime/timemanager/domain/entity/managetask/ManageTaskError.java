@@ -32,7 +32,8 @@ public class ManageTaskError {
     }
 
     public CodeableException errDoubledTaskById(TaskId taskId) {
-        return new CodeableException(doubledTaskErrorCode, String.format("Doubled task by id = '%s'", taskId));
+        var errMsg = String.format("Doubled task by id = '%s'", taskId);
+        return new CodeableException(doubledTaskErrorCode, errMsg);
     }
 
     public CodeableException errTaskNotFoundById(TaskId taskId) {

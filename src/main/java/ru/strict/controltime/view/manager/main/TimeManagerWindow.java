@@ -6,10 +6,14 @@ import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
 import ru.strict.controltime.timemanager.domain.entity.managetask.ManageTask;
-import ru.strict.controltime.view.common.TopPanel;
+import ru.strict.controltime.view.common.BaseWindow;
+import ru.strict.controltime.view.common.BaseWindowParams;
+import ru.strict.controltime.view.common.TopPanelParamsBuilder;
+import ru.strict.controltime.view.common.ViewUtil;
 import ru.strict.util.ResourcesUtil;
 import ru.strict.util.TrayUtil;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,46 +24,31 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TimeManagerWindow {
+public class TimeManagerWindow extends BaseWindow {
 
     private static final int windowWidth = 250;
     private static final int windowHeight = 350;
     private static final Insets windowInsets = new Insets(2,10,2,10);
     private static final int maxComponentWidth = windowWidth - windowInsets.left - windowInsets.right - 15;
     private static final Color windowBackgroundColor = new Color(255, 255, 255);
-    private static final String logoFileName = "logo.png";
+    private static final String windowTitle = "control-time";
 
     final String appPath;
 
-    JFrame frame;
-    File logoFile;
-    JPanel centerPanel;
     GridBagLayout centerPanelLayout;
     GridBagConstraints centerPanelLayoutConstraints;
     Map<TaskId, TaskProgressBar> taskProgressBarsMap;
     JLabel computerWorkDurationLabel;
 
     public TimeManagerWindow(String appPath) {
+        super(getWindowParams(appPath));
         this.appPath = appPath;
         this.taskProgressBarsMap = new HashMap<>();
     }
 
-    public void init(TimeManager timeManager) {
-        initLogoFile();
-        initWindowParams();
-        initTopPanel();
-        initCenterPanel();
+    public void initTimeManager(TimeManager timeManager) {
         initComputerWorkDurationComponent();
-        initTaskProgressBars(timeManager);
-    }
-
-    public void show() {
-        frame.setVisible(true);
-        frame.setState(0);
-    }
-
-    public void hide() {
-        frame.setVisible(false);
+        timeManager.getTasks().forEach(this::addTaskProgressBar);
     }
 
     public void refreshComputerWorkDuration(Duration computerWorkDuration) {
@@ -91,66 +80,27 @@ public class TimeManagerWindow {
         show();
     }
 
-    private void initWindowParams() {
-        frame = new JFrame();
-
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-        frame.setUndecorated(true);
-        frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
-        frame.setSize(windowWidth, windowHeight);
-        frame.setBackground(windowBackgroundColor);
-        frame.getContentPane().setBackground(windowBackgroundColor);
-
-        TrayUtil.setTray("control-time", logoFile.getAbsolutePath(), this::onTrayDoubleClick, true);
-        frame.setIconImage((new ImageIcon(logoFile.getAbsolutePath())).getImage());
+    @Override
+    protected void initFrame(@Nonnull JFrame frame) {
+        super.initFrame(frame);
 
         frame.setLocation(
                 Toolkit.getDefaultToolkit().getScreenSize().width - frame.getWidth(),
                 Toolkit.getDefaultToolkit().getScreenSize().height - frame.getHeight() - 40);
 
+        var logoFile = ViewUtil.getLogoFile(appPath);
+        TrayUtil.setTray("control-time", logoFile.getAbsolutePath(), this::onTrayDoubleClick, true);
     }
 
-    private void initTopPanel() {
+    @Override
+    protected TopPanelParamsBuilder initTopPanelParams() {
         var settingsMenu = new JMenu("Настройки");
         var tasksMenuItem = new JMenuItem("Задачи");
         settingsMenu.add(tasksMenuItem);
 
-        var topPanel = TopPanel.builder().
-                parentWindow(frame).
+        return super.initTopPanelParams().
                 visibleChangeSizeButton(false).
-                iconPath(logoFile.getAbsolutePath()).
-                title("control-time").
-                addMenu(settingsMenu).
-                build();
-
-        frame.add(topPanel, BorderLayout.NORTH);
-    }
-
-    private void initCenterPanel() {
-        centerPanel = new JPanel();
-        centerPanel.setBackground(frame.getBackground());
-
-        centerPanelLayout = new GridBagLayout();
-        centerPanel.setLayout(centerPanelLayout);
-
-        centerPanelLayoutConstraints = new GridBagConstraints();
-        centerPanelLayoutConstraints.insets = windowInsets;
-        centerPanelLayoutConstraints.gridx = 0;
-        centerPanelLayoutConstraints.gridy = GridBagConstraints.RELATIVE;
-        centerPanelLayoutConstraints.gridwidth = GridBagConstraints.REMAINDER;
-        centerPanelLayoutConstraints.fill = GridBagConstraints.HORIZONTAL;
-        centerPanelLayoutConstraints.weightx = 1;
-        centerPanelLayoutConstraints.anchor = GridBagConstraints.NORTH;
-
-        var centerPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        centerPanelWrapper.setBackground(frame.getBackground());
-        centerPanelWrapper.add(centerPanel);
-        frame.add(centerPanelWrapper, BorderLayout.CENTER);
+                addMenu(settingsMenu);
     }
 
     private void initComputerWorkDurationComponent() {
@@ -158,17 +108,12 @@ public class TimeManagerWindow {
         computerWorkDurationLabel = new JLabel("00:00:00");
 
         var pcWorkingPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        pcWorkingPanel.setBackground(frame.getBackground());
+        pcWorkingPanel.setBackground(getFrame().getBackground());
         pcWorkingPanel.add(labelCaption);
         pcWorkingPanel.add(computerWorkDurationLabel);
 
         centerPanelLayout.setConstraints(pcWorkingPanel, centerPanelLayoutConstraints);
-        centerPanel.add(pcWorkingPanel);
-
-    }
-
-    private void initTaskProgressBars(TimeManager timeManager) {
-        timeManager.getTasks().forEach(this::addTaskProgressBar);
+        getCenterPanel().add(pcWorkingPanel);
     }
 
     private void addTaskProgressBar(Task task) {
@@ -177,7 +122,7 @@ public class TimeManagerWindow {
         taskProgressBar.setPreferredSize(new Dimension(maxComponentWidth,20));
 
         var taskPanel = new JPanel();
-        taskPanel.setBackground(frame.getBackground());
+        taskPanel.setBackground(getFrame().getBackground());
 
         var taskLayout = new GridBagLayout();
         taskPanel.setLayout(taskLayout);
@@ -196,17 +141,45 @@ public class TimeManagerWindow {
         taskPanel.add(taskProgressBar);
 
         centerPanelLayout.setConstraints(taskPanel, centerPanelLayoutConstraints);
-        centerPanel.add(taskPanel);
+        getCenterPanel().add(taskPanel);
 
         taskProgressBarsMap.put(task.getId(), taskProgressBar);
     }
 
-    private void initLogoFile() {
-        var logoFile = new File(appPath + File.separator + logoFileName);
-        if (!logoFile.exists()) {
-            ResourcesUtil.getResourceAsFile(logoFileName, logoFile.getAbsolutePath());
-        }
+    @Nonnull
+    @Override
+    protected JPanel createCenterPanel() {
+        var centerPanel = new JPanel();
+        centerPanel.setBackground(getFrame().getBackground());
 
-        this.logoFile = logoFile;
+        centerPanelLayout = new GridBagLayout();
+        centerPanel.setLayout(centerPanelLayout);
+
+        centerPanelLayoutConstraints = new GridBagConstraints();
+        centerPanelLayoutConstraints.insets = windowInsets;
+        centerPanelLayoutConstraints.gridx = 0;
+        centerPanelLayoutConstraints.gridy = GridBagConstraints.RELATIVE;
+        centerPanelLayoutConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        centerPanelLayoutConstraints.fill = GridBagConstraints.HORIZONTAL;
+        centerPanelLayoutConstraints.weightx = 1;
+        centerPanelLayoutConstraints.anchor = GridBagConstraints.NORTH;
+
+        var centerPanelWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        centerPanelWrapper.setBackground(getFrame().getBackground());
+        centerPanelWrapper.add(centerPanel);
+
+        return centerPanelWrapper;
+    }
+
+    private static BaseWindowParams getWindowParams(String appPath) {
+        var logoFile = ViewUtil.getLogoFile(appPath);
+
+        return BaseWindowParams.builder().
+                title(windowTitle).
+                width(windowWidth).
+                height(windowHeight).
+                background(windowBackgroundColor).
+                logoFile(logoFile).
+                build();
     }
 }

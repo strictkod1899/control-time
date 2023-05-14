@@ -6,26 +6,28 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
-import ru.strict.view.boundary.ViewModel;
+import ru.strict.view.boundary.BaseViewModel;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotificationViewModel implements ViewModel<NotificationViewState> {
-
-    NotificationViewState state;
+public class NotificationViewModel extends BaseViewModel<NotificationViewState> {
 
     Task currentTaskForNotify;
     Set<TaskId> activeTaskNotifications;
 
     public NotificationViewModel() {
-        state = NotificationViewState.none;
         activeTaskNotifications = new HashSet<>();
+    }
+
+    @Nonnull
+    @Override
+    protected NotificationViewState getUnknownState() {
+        return NotificationViewState.none;
     }
 
     public boolean isActiveTaskNotification(TaskId taskId) {
@@ -38,20 +40,5 @@ public class NotificationViewModel implements ViewModel<NotificationViewState> {
 
     public void removeActiveTaskNotification(TaskId taskId) {
         activeTaskNotifications.remove(taskId);
-    }
-
-    public void resetState() {
-        state = NotificationViewState.none;
-    }
-
-    @Override
-    public void setState(@Nonnull NotificationViewState state) {
-        this.state = state;
-    }
-
-    @Nonnull
-    @Override
-    public NotificationViewState getState() {
-        return state;
     }
 }

@@ -1,10 +1,10 @@
-package ru.strict.controltime.view.manager.main;
+package ru.strict.controltime.view.common;
 
 import lombok.experimental.UtilityClass;
 import ru.strict.exception.CodeableException;
 
 @UtilityClass
-public class TimeManagerViewComponentError {
+public class TopPanelError {
     public static String parentWindowForTopPanelIsRequiredErrorCode = "57e5d609-001";
 
     public CodeableException errParentWindowForTopPanelIsRequired() {

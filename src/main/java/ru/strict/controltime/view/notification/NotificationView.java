@@ -3,58 +3,47 @@ package ru.strict.controltime.view.notification;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.strict.validate.CommonValidator;
-import ru.strict.view.boundary.View;
+import ru.strict.view.boundary.BaseView;
 import ru.strict.view.swing.NotificationWindow;
 
 import javax.annotation.Nonnull;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class NotificationView implements View<NotificationViewState, NotificationViewModel> {
-    NotificationViewModel model;
-
-    public NotificationView(NotificationViewModel model) {
-        CommonValidator.throwIfNull(model, "notificationViewModel");
-
-        this.model = model;
-    }
-
-    @Override
-    public synchronized void refresh(@Nonnull NotificationViewState state) {
-        model.setState(state);
-        refresh();
+public class NotificationView extends BaseView<NotificationViewState, NotificationViewModel> {
+    public NotificationView(@Nonnull NotificationViewModel model) {
+        super(model);
     }
 
     @Override
     public synchronized void refresh() {
-        switch (model.getState()) {
+        switch (getModel().getState()) {
             case showNotification:
                 showNotification();
                 break;
             case none:
                 break;
             default:
-                throw NotificationViewError.errUnsupportedViewState(model.getState());
+                throw NotificationViewError.errUnsupportedViewState(getModel().getState());
         }
-    }
-
-    private void showNotification() {
-        CommonValidator.throwIfNull(model.getCurrentTaskForNotify(), "taskForNotify");
-
-        var task = model.getCurrentTaskForNotify();
-        var notificationWindow = new NotificationWindow(task.getMessage().toString());
-        notificationWindow.getParams().addCustomCloseButtonAction((e) -> {
-            model.removeActiveTaskNotification(task.getId());
-        });
-        notificationWindow.show();
-
-        model.addActiveTaskNotification(task.getId());
-        model.setCurrentTaskForNotify(null);
-        model.resetState();
     }
 
     @Nonnull
     @Override
-    public NotificationViewModel getModel() {
-        return model;
+    protected Object getLockObject(@Nonnull NotificationViewState state) {
+        return this;
+    }
+
+    private void showNotification() {
+        CommonValidator.throwIfNull(getModel().getCurrentTaskForNotify(), "taskForNotify");
+
+        var task = getModel().getCurrentTaskForNotify();
+        var notificationWindow = new NotificationWindow(task.getMessage().toString());
+        notificationWindow.getParams().addCustomCloseButtonAction((e) -> {
+            getModel().removeActiveTaskNotification(task.getId());
+        });
+        notificationWindow.show();
+
+        getModel().addActiveTaskNotification(task.getId());
+        getModel().setCurrentTaskForNotify(null);
     }
 }
