@@ -1,4 +1,4 @@
-package ru.strict.controltime.view.manager.component;
+package ru.strict.controltime.view.manager.main;
 
 import lombok.experimental.UtilityClass;
 import ru.strict.exception.CodeableException;

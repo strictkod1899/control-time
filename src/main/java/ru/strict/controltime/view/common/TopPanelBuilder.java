@@ -2,18 +2,17 @@ package ru.strict.controltime.view.common;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.view.manager.component.TimeManagerViewComponentError;
+import ru.strict.controltime.view.manager.main.TimeManagerViewComponentError;
 import ru.strict.exception.Errors;
 import ru.strict.validate.CommonValidator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TopPanelBuilder {
@@ -31,15 +30,18 @@ public class TopPanelBuilder {
     GridBagLayout layout;
     GridBagConstraints layoutConstraints;
     Color backgroundColor;
+    List<JMenu> menuList;
 
     TopPanel topPanel;
     JPanel leftPanel;
     JPanel rightPanel;
+    JMenuBar menuBar;
 
     Errors errors;
 
     public TopPanelBuilder() {
         errors = new Errors();
+        menuList = new ArrayList<>();
     }
 
     public TopPanelBuilder parentWindow(Container parentWindow) {
@@ -59,6 +61,11 @@ public class TopPanelBuilder {
 
     public TopPanelBuilder iconPath(String iconPath) {
         this.iconPath = iconPath;
+        return this;
+    }
+
+    public TopPanelBuilder addMenu(JMenu menu) {
+        this.menuList.add(menu);
         return this;
     }
 
@@ -151,6 +158,17 @@ public class TopPanelBuilder {
         layoutConstraints.weightx = 0.0D;
         layout.setConstraints(rightPanel, layoutConstraints);
         topPanel.add(rightPanel);
+
+        if (menuList.isEmpty()) {
+            return;
+        }
+
+        initMenu();
+        layoutConstraints.gridx = 0;
+        layoutConstraints.gridy = 1;
+        layoutConstraints.gridwidth = 0;
+        layout.setConstraints(this.menuBar, layoutConstraints);
+        topPanel.add(this.menuBar);
     }
 
     private void initLeftPanel() {
@@ -319,6 +337,11 @@ public class TopPanelBuilder {
         activeButtons.forEach(rightPanel::add);
 
         this.rightPanel = rightPanel;
+    }
+
+    private void initMenu() {
+        this.menuBar = new JMenuBar();
+        menuList.forEach(menuBar::add);
     }
 
     private void initWindowMoving() {

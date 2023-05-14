@@ -2,7 +2,7 @@ package ru.strict.controltime.view.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.view.manager.component.TimeManagerWindow;
+import ru.strict.controltime.view.manager.main.TimeManagerWindow;
 import ru.strict.validate.CommonValidator;
 import ru.strict.view.boundary.View;
 

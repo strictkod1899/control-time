@@ -1,4 +1,4 @@
-package ru.strict.controltime.view.manager.component;
+package ru.strict.controltime.view.manager.main;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,6 +27,7 @@ class TaskProgressBar extends JProgressBar {
 
         setMinimum(0);
         setMaximum((int)task.getSleepDuration().toMillis());
+        setStringPainted(true);
     }
 
     public void refreshAsNotActive() {
@@ -40,14 +41,8 @@ class TaskProgressBar extends JProgressBar {
     }
 
     public void refreshProgress(ManageTask manageTask) {
-        var sleepDuration = manageTask.getTask().getSleepDuration();
         var lastStartedAt = manageTask.getLastProcessedAt().orElse(manageTask.getStartedAt());
-
-        var expectedTaskFinishedAt = lastStartedAt.plus(sleepDuration.toDuration());
-
         var processedDurationMillis = Instant.now().toEpochMilli() - lastStartedAt.toEpochMilli();
-        var remainingDurationMillis = expectedTaskFinishedAt.toEpochMilli() - Instant.now().toEpochMilli();
-        var remainingPercent = CommonUtil.calcPercent(sleepDuration.toMillis(), remainingDurationMillis);
 
         setValue((int)processedDurationMillis);
         SwingUtil.refresh(this);
