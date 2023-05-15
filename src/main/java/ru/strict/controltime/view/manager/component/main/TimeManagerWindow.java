@@ -1,4 +1,4 @@
-package ru.strict.controltime.view.manager.main;
+package ru.strict.controltime.view.manager.component.main;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -10,14 +10,13 @@ import ru.strict.controltime.view.common.BaseWindow;
 import ru.strict.controltime.view.common.BaseWindowParams;
 import ru.strict.controltime.view.common.TopPanelParamsBuilder;
 import ru.strict.controltime.view.common.ViewUtil;
-import ru.strict.util.ResourcesUtil;
+import ru.strict.controltime.view.manager.presenter.SettingsPresenter;
 import ru.strict.util.TrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,15 +33,17 @@ public class TimeManagerWindow extends BaseWindow {
     private static final String windowTitle = "control-time";
 
     final String appPath;
+    final SettingsPresenter settingsPresenter;
 
     GridBagLayout centerPanelLayout;
     GridBagConstraints centerPanelLayoutConstraints;
     Map<TaskId, TaskProgressBar> taskProgressBarsMap;
     JLabel computerWorkDurationLabel;
 
-    public TimeManagerWindow(String appPath) {
+    public TimeManagerWindow(String appPath, SettingsPresenter settingsPresenter) {
         super(getWindowParams(appPath));
         this.appPath = appPath;
+        this.settingsPresenter = settingsPresenter;
         this.taskProgressBarsMap = new HashMap<>();
     }
 
@@ -96,6 +97,7 @@ public class TimeManagerWindow extends BaseWindow {
     protected TopPanelParamsBuilder initTopPanelParams() {
         var settingsMenu = new JMenu("Настройки");
         var tasksMenuItem = new JMenuItem("Задачи");
+        tasksMenuItem.addActionListener(e -> settingsPresenter.showTasksSettings());
         settingsMenu.add(tasksMenuItem);
 
         return super.initTopPanelParams().

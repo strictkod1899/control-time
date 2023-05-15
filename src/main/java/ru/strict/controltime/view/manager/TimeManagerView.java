@@ -2,7 +2,9 @@ package ru.strict.controltime.view.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.view.manager.main.TimeManagerWindow;
+import ru.strict.controltime.view.manager.component.main.TimeManagerWindow;
+import ru.strict.controltime.view.manager.presenter.SettingsPresenter;
+import ru.strict.controltime.view.settings.SettingsViewController;
 import ru.strict.validate.CommonValidator;
 import ru.strict.view.boundary.BaseView;
 
@@ -12,9 +14,12 @@ import javax.annotation.Nonnull;
 public class TimeManagerView extends BaseView<TimeManagerViewState, TimeManagerViewModel> {
     TimeManagerWindow window;
 
-    public TimeManagerView(@Nonnull TimeManagerViewModel model, String appPath) {
+    public TimeManagerView(
+            @Nonnull TimeManagerViewModel model,
+            String appPath,
+            SettingsPresenter settingsPresenter) {
         super(model);
-        this.window = new TimeManagerWindow(appPath);
+        this.window = new TimeManagerWindow(appPath, settingsPresenter);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.strict.controltime.view.manager.main;
+package ru.strict.controltime.view.manager.component.main;
 
 import lombok.AccessLevel;
 import lombok.Getter;

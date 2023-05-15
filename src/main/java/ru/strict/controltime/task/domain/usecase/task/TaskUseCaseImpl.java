@@ -14,6 +14,8 @@ import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.task.domain.entity.task.TaskId;
 import ru.strict.validate.CommonValidator;
 
+import java.util.List;
+
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TaskUseCaseImpl implements TaskUseCase {
@@ -67,5 +69,10 @@ public class TaskUseCaseImpl implements TaskUseCase {
         } catch (Exception ex) {
             log.error("fail publish event 'taskDeleted'", ex);
         }
+    }
+
+    @Override
+    public List<Task> getTasks() {
+        return taskRepository.getAllTasks();
     }
 }

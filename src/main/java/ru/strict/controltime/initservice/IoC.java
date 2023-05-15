@@ -2,6 +2,7 @@ package ru.strict.controltime.initservice;
 
 import ru.strict.controltime.Main;
 import ru.strict.controltime.common.task.domain.usecase.event.TaskEventUseCaseImpl;
+import ru.strict.controltime.task.adapter.controller.inner.task.TaskInnerController;
 import ru.strict.controltime.task.adapter.event.task.TaskEventPublisherImpl;
 import ru.strict.controltime.task.adapter.repository.task.TaskJsonRepository;
 import ru.strict.controltime.task.domain.usecase.task.TaskUseCaseImpl;
@@ -10,13 +11,15 @@ import ru.strict.controltime.timemanager.adapter.presenter.notification.Notifica
 import ru.strict.controltime.timemanager.adapter.presenter.timemanager.TimeManagerPresenterImpl;
 import ru.strict.controltime.timemanager.adapter.repository.manager.TimeManagerInMemoryRepository;
 import ru.strict.controltime.timemanager.adapter.scheduler.manager.ProcessTasksScheduler;
-import ru.strict.controltime.timemanager.boundary.repository.TaskRepository;
 import ru.strict.controltime.timemanager.domain.usecase.manager.TimeManagerUseCaseImpl;
 import ru.strict.controltime.timemanager.domain.usecase.task.event.handler.AddTaskHandler;
 import ru.strict.controltime.view.manager.TimeManagerViewController;
+import ru.strict.controltime.view.manager.presenter.SettingsPresenterImpl;
 import ru.strict.controltime.view.manager.scheduler.ComputerWorkDurationScheduler;
 import ru.strict.controltime.view.manager.scheduler.RefreshTimeManagerScheduler;
 import ru.strict.controltime.view.notification.NotificationViewController;
+import ru.strict.controltime.view.settings.SettingsViewController;
+import ru.strict.controltime.view.settings.gateway.TaskGatewayImpl;
 import ru.strict.event.EventBus;
 import ru.strict.file.json.JacksonObjectMapper;
 import ru.strict.ioc.InstanceType;
@@ -52,9 +55,15 @@ public class IoC extends SingletonIoC {
         addComponent(TimeManagerUseCaseImpl.class);
         addComponent(TaskEventUseCaseImpl.class);
         addComponent(AddTaskHandler.class);
+
+        addComponent(TaskInnerController.class);
         addComponent(TimeManagerInnerController.class);
+
+        addComponent(SettingsViewController.class);
         addComponent(TimeManagerViewController.class);
         addComponent(NotificationViewController.class);
+        addComponent(SettingsPresenterImpl.class);
+        addComponent(TaskGatewayImpl.class);
         addComponent(ComputerWorkDurationScheduler.class);
         addComponent(RefreshTimeManagerScheduler.class);
         addComponent(ProcessTasksScheduler.class);

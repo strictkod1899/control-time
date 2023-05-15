@@ -2,14 +2,13 @@ package ru.strict.controltime.view.settings;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import ru.strict.controltime.view.settings.component.tasks.TasksSettingsWindow;
 import ru.strict.view.boundary.BaseView;
 
 import javax.annotation.Nonnull;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsView extends BaseView<SettingsViewState, SettingsViewModel> {
-
-
 
     public SettingsView(@Nonnull SettingsViewModel model) {
         super(model);
@@ -29,7 +28,8 @@ public class SettingsView extends BaseView<SettingsViewState, SettingsViewModel>
     }
 
     private void showTasksSettings() {
-
+        var window = new TasksSettingsWindow();
+        window.show();
     }
 
     @Nonnull
