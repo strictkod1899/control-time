@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class TopPanelParams {
     String iconPath;
     Color background;
     List<JMenu> menuList;
+    TopPanel.Action exitButtonAction;
 
     public Optional<String> getIconPath() {
         return Optional.ofNullable(iconPath);

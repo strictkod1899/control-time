@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TaskGateway {
     List<Task> getActualTasks();
+    void createTask(String message, long sleepDurationNanos);
 }

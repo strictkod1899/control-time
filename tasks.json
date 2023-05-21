@@ -3,7 +3,7 @@
     {
       "id": "e848ee8a-ee4e-415c-a057-be42a2989717",
       "message": "Отдых",
-      "sleepDurationNanos": 10000000000
+      "sleepDurationNanos": 30000000000
     }
   ]
 }

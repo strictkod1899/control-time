@@ -6,6 +6,7 @@ import ru.strict.exception.Errors;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class TopPanelParamsBuilder {
     String iconPath;
     Color background;
     List<JMenu> menuList;
+    TopPanel.Action exitButtonAction;
 
     Errors errors;
 
@@ -37,8 +39,18 @@ public class TopPanelParamsBuilder {
         return this;
     }
 
+    public TopPanelParamsBuilder visibleTurnButton(boolean visibleTurnButton) {
+        this.visibleTurnButton = visibleTurnButton;
+        return this;
+    }
+
     public TopPanelParamsBuilder visibleChangeSizeButton(boolean visibleChangeSizeButton) {
         this.visibleChangeSizeButton = visibleChangeSizeButton;
+        return this;
+    }
+
+    public TopPanelParamsBuilder visibleExitButton(boolean visibleExitButton) {
+        this.visibleExitButton = visibleExitButton;
         return this;
     }
 
@@ -57,6 +69,11 @@ public class TopPanelParamsBuilder {
         return this;
     }
 
+    public TopPanelParamsBuilder exitButtonAction(TopPanel.Action exitButtonAction) {
+        this.exitButtonAction = exitButtonAction;
+        return this;
+    }
+
     public TopPanelParams build() {
         checkRequiredFields();
         if (errors.isPresent()) {
@@ -64,6 +81,11 @@ public class TopPanelParamsBuilder {
         }
 
         fillDefaultFields();
+
+        checkVisibleParams();
+        if (errors.isPresent()) {
+            throw errors.toException();
+        }
 
         return createFromBuilder();
     }
@@ -107,6 +129,12 @@ public class TopPanelParamsBuilder {
         }
     }
 
+    private void checkVisibleParams() {
+        if (visibleExitButton && exitButtonAction == null) {
+            errors.addError(TopPanelError.errExitButtonActionIsRequired());
+        }
+    }
+
     private TopPanelParams createFromBuilder() {
         var params = new TopPanelParams();
         params.parentWindow = parentWindow;
@@ -122,6 +150,7 @@ public class TopPanelParamsBuilder {
         params.iconPath = iconPath;
         params.background = background;
         params.menuList = menuList;
+        params.exitButtonAction = exitButtonAction;
 
         return params;
     }

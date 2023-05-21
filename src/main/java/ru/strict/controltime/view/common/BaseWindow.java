@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class BaseWindow {
@@ -19,7 +20,6 @@ public abstract class BaseWindow {
 
     public BaseWindow(@Nonnull BaseWindowParams params) {
         this.params = params;
-        init();
     }
 
     public void show() {
@@ -31,14 +31,19 @@ public abstract class BaseWindow {
         frame.setVisible(false);
     }
 
-    private void init() {
+    public void close() {
+        frame.dispatchEvent(new WindowEvent(getFrame(), WindowEvent.WINDOW_CLOSING));
+    }
+
+    public void init() {
         frame = new JFrame();
         initFrame(frame);
 
-        centerPanel = createCenterPanel();
-
         var topPanelParams = initTopPanelParams().build();
         var topPanel = new TopPanel(topPanelParams);
+
+        centerPanel = createCenterPanel();
+        initComponents();
 
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(centerPanel, BorderLayout.CENTER);
@@ -75,4 +80,5 @@ public abstract class BaseWindow {
 
     @Nonnull
     protected abstract JPanel createCenterPanel();
+    protected abstract void initComponents();
 }

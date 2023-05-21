@@ -34,7 +34,7 @@ public class TaskUseCaseImpl implements TaskUseCase {
     }
 
     @Override
-    public void addTask(CreateTaskData createTaskData) {
+    public void createTask(CreateTaskData createTaskData) {
         if (createTaskData == null) {
             throw TaskUseCaseError.errCreateTaskDataIsRequired();
         }

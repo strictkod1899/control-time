@@ -96,7 +96,7 @@ public class TopPanel extends JPanel {
             public void mouseReleased(MouseEvent event) {
                 setButtonPressedValue(event, false);
                 event.getComponent().setBackground(getBackground());
-                System.exit(0);
+                params.getExitButtonAction().handle();
             }
         };
 
@@ -295,5 +295,10 @@ public class TopPanel extends JPanel {
         public void mousePressed(MouseEvent event) {
             position = event.getPoint();
         }
+    }
+
+    @FunctionalInterface
+    public interface Action {
+        void handle();
     }
 }

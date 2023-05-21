@@ -45,6 +45,8 @@ public class TimeManagerWindow extends BaseWindow {
         this.appPath = appPath;
         this.settingsPresenter = settingsPresenter;
         this.taskProgressBarsMap = new HashMap<>();
+
+        init();
     }
 
     public void initTimeManager(TimeManager timeManager) {
@@ -102,7 +104,8 @@ public class TimeManagerWindow extends BaseWindow {
 
         return super.initTopPanelParams().
                 visibleChangeSizeButton(false).
-                addMenu(settingsMenu);
+                addMenu(settingsMenu).
+                exitButtonAction(() -> System.exit(0));
     }
 
     private void initComputerWorkDurationComponent() {
@@ -172,6 +175,9 @@ public class TimeManagerWindow extends BaseWindow {
 
         return centerPanelWrapper;
     }
+
+    @Override
+    protected void initComponents() {}
 
     private static BaseWindowParams getWindowParams(String appPath) {
         var logoFile = ViewUtil.getLogoFile(appPath);

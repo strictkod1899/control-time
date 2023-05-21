@@ -2,7 +2,10 @@ package ru.strict.controltime.view.settings;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import ru.strict.controltime.view.settings.component.tasks.SettingsListener;
 import ru.strict.controltime.view.settings.component.tasks.TasksSettingsWindow;
+import ru.strict.ioc.annotation.Component;
+import ru.strict.validate.CommonValidator;
 import ru.strict.view.boundary.BaseView;
 
 import javax.annotation.Nonnull;
@@ -10,8 +13,16 @@ import javax.annotation.Nonnull;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsView extends BaseView<SettingsViewState, SettingsViewModel> {
 
-    public SettingsView(@Nonnull SettingsViewModel model) {
+    final String appPath;
+    final SettingsListener settingsListener;
+
+    public SettingsView(
+            SettingsViewModel model,
+            @Component("appPath") String appPath,
+            SettingsListener settingsListener) {
         super(model);
+        this.appPath = appPath;
+        this.settingsListener = settingsListener;
     }
 
     @Override
@@ -28,7 +39,9 @@ public class SettingsView extends BaseView<SettingsViewState, SettingsViewModel>
     }
 
     private void showTasksSettings() {
-        var window = new TasksSettingsWindow();
+        CommonValidator.throwIfNull(getModel().getActualTasks(), "actualTasks");
+
+        var window = new TasksSettingsWindow(appPath, getModel().getActualTasks(), settingsListener);
         window.show();
     }
 

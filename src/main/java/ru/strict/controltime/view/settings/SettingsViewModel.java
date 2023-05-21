@@ -15,10 +15,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SettingsViewModel extends BaseViewModel<SettingsViewState> {
 
-    List<Task> existsTasks;
+    List<Task> actualTasks;
 
     public SettingsViewModel() {
-        existsTasks = List.of();
+        actualTasks = List.of();
     }
 
     @Nonnull

@@ -15,7 +15,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AddTaskTest extends TaskUseCaseTestCommon {
+class CreateTaskTest extends TaskUseCaseTestCommon {
 
     @BeforeEach
     public void setupTest() {
@@ -23,8 +23,8 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_WithoutParams_ThrowException() {
-        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(null));
+    void testCreateTask_WithoutParams_ThrowException() {
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.createTask(null));
 
         assertTrue(actualEx.equalsByCode(TaskUseCaseError.createTaskDataIsRequiredErrorCode));
 
@@ -33,10 +33,10 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_WithoutMessage_ThrowException() {
+    void testCreateTask_WithoutMessage_ThrowException() {
         var createTaskParams = CreateTaskData.builder().build();
 
-        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.createTask(createTaskParams));
 
         assertTrue(actualEx.equalsByCode(TaskError.messageIsEmptyErrorCode));
 
@@ -45,12 +45,12 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_WithoutSleepDuration_ThrowException() {
+    void testCreateTask_WithoutSleepDuration_ThrowException() {
         var createTaskParams = CreateTaskData.builder().
                 message(TaskStub.getMessage().toString()).
                 build();
 
-        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.createTask(createTaskParams));
 
         assertTrue(actualEx.equalsByCode(TaskError.durationIsRequiredErrorCode));
 
@@ -59,7 +59,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_InsertTaskRepoError_ThrowException() {
+    void testCreateTask_InsertTaskRepoError_ThrowException() {
         var expectedEx = ExceptionStub.getException();
         doThrow(expectedEx).when(taskRepositoryMock).insert(any());
 
@@ -68,7 +68,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
                 sleepDuration(Duration.ofNanos(TaskStub.getSleepDuration().toNanos())).
                 build();
 
-        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.addTask(createTaskParams));
+        var actualEx = assertThrows(CodeableException.class, () -> this.taskUseCase.createTask(createTaskParams));
 
         assertEquals(expectedEx, actualEx);
 
@@ -77,7 +77,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_PublishTaskEventError_NoError() {
+    void testCreateTask_PublishTaskEventError_NoError() {
         var expectedEx = ExceptionStub.getException();
         doThrow(expectedEx).when(taskEventPublisherMock).taskCreated(any());
         doNothing().when(taskRepositoryMock).insert(any());
@@ -87,7 +87,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
                 sleepDuration(Duration.ofNanos(TaskStub.getSleepDuration().toNanos())).
                 build();
 
-        this.taskUseCase.addTask(createTaskParams);
+        this.taskUseCase.createTask(createTaskParams);
 
         verify(taskRepositoryMock, only()).insert(any());
         verify(taskEventPublisherMock, only()).taskCreated(any());
@@ -100,7 +100,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
     }
 
     @Test
-    void testAddTask_ValidParams_NoError() {
+    void testCreateTask_ValidParams_NoError() {
         doNothing().when(taskEventPublisherMock).taskCreated(any());
         doNothing().when(taskRepositoryMock).insert(any());
 
@@ -109,7 +109,7 @@ class AddTaskTest extends TaskUseCaseTestCommon {
                 sleepDuration(Duration.ofNanos(TaskStub.getSleepDuration().toNanos())).
                 build();
 
-        this.taskUseCase.addTask(createTaskParams);
+        this.taskUseCase.createTask(createTaskParams);
 
         verify(taskRepositoryMock, only()).insert(any());
         verify(taskEventPublisherMock, only()).taskCreated(any());
