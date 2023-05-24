@@ -4,20 +4,28 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.task.domain.entity.task.Task;
+import ru.strict.validate.CommonValidator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
+import java.awt.event.ActionEvent;
+import java.time.Duration;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddTaskPanel extends JPanel {
-    Params params;
-    AddTaskWindow parentWindow;
+    final Params params;
+    final AddTaskWindow parentWindow;
+    final CreateTaskListener createTaskListener;
 
-    public AddTaskPanel(Params params, AddTaskWindow parentWindow) {
+    JTextField taskTextField;
+    JTextField hoursTextField;
+    JTextField minutesTextField;
+    JTextField secondsTextField;
+
+    public AddTaskPanel(Params params, AddTaskWindow parentWindow, CreateTaskListener createTaskListener) {
         this.params = params;
         this.parentWindow = parentWindow;
+        this.createTaskListener = createTaskListener;
 
         initComponents();
     }
@@ -37,7 +45,7 @@ public class AddTaskPanel extends JPanel {
         layoutConstraints.weightx = 1;
         layoutConstraints.anchor = GridBagConstraints.NORTH;
 
-        var taskTextField = new JTextField();
+        taskTextField = new JTextField();
         var textFieldDefaultSize = taskTextField.getPreferredSize();
         taskTextField.setPreferredSize(new Dimension(params.getMaxComponentWidth(), (int) textFieldDefaultSize.getHeight()));
 
@@ -45,11 +53,11 @@ public class AddTaskPanel extends JPanel {
         timePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         timePanel.setBackground(params.getBackground());
 
-        var hoursTextField = new JTextField("00");
+        hoursTextField = new JTextField("00");
         hoursTextField.setPreferredSize(new Dimension(25, (int) textFieldDefaultSize.getHeight()));
-        var minutesTextField = new JTextField("00");
+        minutesTextField = new JTextField("00");
         minutesTextField.setPreferredSize(new Dimension(25, (int) textFieldDefaultSize.getHeight()));
-        var secondsTextField = new JTextField("00");
+        secondsTextField = new JTextField("00");
         secondsTextField.setPreferredSize(new Dimension(25, (int) textFieldDefaultSize.getHeight()));
 
         var managePanel = new JPanel();
@@ -58,6 +66,7 @@ public class AddTaskPanel extends JPanel {
 
         var createButton = new JButton("Создать");
         createButton.setFont(new Font(createButton.getFont().getName(), Font.BOLD, createButton.getFont().getSize()));
+        createButton.addActionListener(this::onCreateTask);
 
         var cancelButton = new JButton("Отмена");
         cancelButton.setFont(new Font(cancelButton.getFont().getName(), Font.BOLD, cancelButton.getFont().getSize()));
@@ -79,6 +88,30 @@ public class AddTaskPanel extends JPanel {
         add(timePanel);
         layout.setConstraints(managePanel, layoutConstraints);
         add(managePanel);
+    }
+
+    private void onCreateTask(ActionEvent event) {
+        var message = taskTextField.getText();
+
+        var hoursStr = hoursTextField.getText();
+        var minutesStr = minutesTextField.getText();
+        var secondsStr = secondsTextField.getText();
+
+        var totalDuration = Duration.ZERO;
+        if (CommonValidator.isInteger(hoursStr)) {
+            var hours = Integer.parseInt(hoursStr);
+            totalDuration = totalDuration.plusHours(hours);
+        }
+        if (CommonValidator.isInteger(minutesStr)) {
+            var minutes = Integer.parseInt(minutesStr);
+            totalDuration = totalDuration.plusMinutes(minutes);
+        }
+        if (CommonValidator.isInteger(secondsStr)) {
+            var seconds = Integer.parseInt(secondsStr);
+            totalDuration = totalDuration.plusSeconds(seconds);
+        }
+
+        createTaskListener.createTask(message, totalDuration.toNanos());
     }
 
     @Value

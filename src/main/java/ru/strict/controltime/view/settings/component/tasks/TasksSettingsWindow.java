@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -26,7 +25,7 @@ public class TasksSettingsWindow extends BaseWindow {
     private static final Color windowBackgroundColor = new Color(255, 255, 255);
 
     final List<Task> originalActualTasks;
-    final SettingsListener settingsListener;
+    final CreateTaskListener createTaskListener;
 
     JPanel centerPanel;
     GridBagLayout centerPanelLayout;
@@ -35,14 +34,14 @@ public class TasksSettingsWindow extends BaseWindow {
     public TasksSettingsWindow(
             @Component("appPath") String appPath,
             List<Task> actualTasks,
-            SettingsListener settingsListener) {
+            CreateTaskListener createTaskListener) {
         super(getWindowParams(appPath));
 
         CommonValidator.throwIfNull(actualTasks, "originalActualTasks");
-        CommonValidator.throwIfNull(settingsListener, "settingsListener");
+        CommonValidator.throwIfNull(createTaskListener, "settingsListener");
 
         this.originalActualTasks = actualTasks;
-        this.settingsListener = settingsListener;
+        this.createTaskListener = createTaskListener;
 
         init();
     }
@@ -113,7 +112,7 @@ public class TasksSettingsWindow extends BaseWindow {
                 locationY((int)sourceLocation.getY() - 50).
                 build();
 
-        var addTaskWindow = new AddTaskWindow(params);
+        var addTaskWindow = new AddTaskWindow(params, createTaskListener);
         addTaskWindow.init();
         addTaskWindow.show();
     }

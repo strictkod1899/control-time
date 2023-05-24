@@ -1,7 +1,9 @@
 package ru.strict.controltime.view.settings.component.tasks;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.view.common.BaseWindow;
 import ru.strict.controltime.view.common.BaseWindowParams;
 import ru.strict.controltime.view.common.TopPanelParamsBuilder;
@@ -10,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddTaskWindow extends BaseWindow {
 
     private static final int windowWidth = 250;
@@ -18,12 +21,14 @@ public class AddTaskWindow extends BaseWindow {
     private static final int maxComponentWidth = windowWidth - windowInsets.left - windowInsets.right - 15;
     private static final Color windowBackgroundColor = new Color(255, 255, 255);
 
-    Params params;
+    final Params params;
+    final CreateTaskListener createTaskListener;
 
-    public AddTaskWindow(Params params) {
+    public AddTaskWindow(Params params, CreateTaskListener createTaskListener) {
         super(getWindowParams());
 
         this.params = params;
+        this.createTaskListener = createTaskListener;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class AddTaskWindow extends BaseWindow {
                 maxComponentWidth(maxComponentWidth).
                 parentInsets(windowInsets).
                 build();
-        var emptyTaskPanel = new AddTaskPanel(taskPanelParams, this);
+        var emptyTaskPanel = new AddTaskPanel(taskPanelParams, this, createTaskListener);
 
         centerPanel.add(emptyTaskPanel);
 
