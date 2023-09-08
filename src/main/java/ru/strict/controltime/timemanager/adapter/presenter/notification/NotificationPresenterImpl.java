@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.controltime.timemanager.boundary.presenter.NotificationPresenter;
+import ru.strict.controltime.view.notification.NotificationView;
 import ru.strict.controltime.view.notification.NotificationViewController;
 import ru.strict.view.swing.NotificationWindow;
 
@@ -18,6 +19,6 @@ public class NotificationPresenterImpl implements NotificationPresenter {
 
     @Override
     public void showNotification(Task task) {
-        notificationViewController.showNotificationFromTask(task);
+        notificationViewController.showNotificationForTask(task);
     }
 }

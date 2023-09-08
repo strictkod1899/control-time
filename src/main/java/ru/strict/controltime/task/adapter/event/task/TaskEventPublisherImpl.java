@@ -8,10 +8,12 @@ import ru.strict.event.EventPublisher;
 import ru.strict.controltime.common.task.boundary.model.TaskEvent;
 import ru.strict.ioc.annotation.Component;
 
-public class TaskEventPublisherImpl extends EventPublisher<TaskEvent> implements TaskEventPublisher {
+public class TaskEventPublisherImpl extends EventPublisher implements TaskEventPublisher {
 
-    public TaskEventPublisherImpl(@Component("taskEventBus") EventBroker<TaskEvent> eventBroker) {
-        super(eventBroker);
+    public TaskEventPublisherImpl(
+            @Component("taskEventBus") EventBroker eventBroker,
+            @Component("taskEventTopic") String topic) {
+        super(eventBroker, topic);
     }
 
     @Override

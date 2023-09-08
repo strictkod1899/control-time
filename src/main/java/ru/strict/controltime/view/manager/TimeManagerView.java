@@ -2,69 +2,48 @@ package ru.strict.controltime.view.manager;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.view.manager.component.main.TimeManagerWindow;
+import ru.strict.controltime.timemanager.domain.entity.manager.TimeManager;
+import ru.strict.controltime.view.manager.component.TimeManagerWindow;
 import ru.strict.controltime.view.manager.presenter.SettingsPresenter;
-import ru.strict.controltime.view.settings.SettingsViewController;
 import ru.strict.validate.CommonValidator;
 import ru.strict.view.boundary.BaseView;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class TimeManagerView extends BaseView<TimeManagerViewState, TimeManagerViewModel> {
-    TimeManagerWindow window;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class TimeManagerView {
 
-    public TimeManagerView(
-            @Nonnull TimeManagerViewModel model,
-            String appPath,
-            SettingsPresenter settingsPresenter) {
-        super(model);
+    final TimeManagerWindow window;
+
+    TimeManager actualTimeManager;
+    Duration computerWorkDuration;
+
+    public TimeManagerView(String appPath, SettingsPresenter settingsPresenter) {
         this.window = new TimeManagerWindow(appPath, settingsPresenter);
     }
 
-    @Override
-    protected void refresh() {
-        switch (getModel().getState()) {
-            case init:
-                initActualTimeManager();
-                break;
-            case refreshTimeManager:
-                refreshActualTimeManager();
-                break;
-            case refreshComputerWorkDuration:
-                refreshComputerWorkDuration();
-                break;
-            case none:
-                break;
-            default:
-                throw TimeManagerViewError.errUnsupportedViewState(getModel().getState());
-        }
-    }
+    public void show(TimeManager timeManager) {
+        CommonValidator.throwIfNull(timeManager, "timeManager");
 
-    @Nonnull
-    @Override
-    protected Object getLockObject(@Nonnull TimeManagerViewState state) {
-        return this;
-    }
+        this.actualTimeManager = timeManager;
 
-    private void initActualTimeManager() {
-        CommonValidator.throwIfNull(getModel().getActualTimeManager(), "actualTimeManager");
-
-        window.initTimeManager(getModel().getActualTimeManager());
+        window.initTimeManager(actualTimeManager);
         window.show();
     }
 
-    private void refreshActualTimeManager() {
-        CommonValidator.throwIfNull(getModel().getActualTimeManager(), "actualTimeManager");
+    public void refreshActualTimeManager(TimeManager timeManager) {
+        CommonValidator.throwIfNull(timeManager, "timeManager");
 
-        getModel().getActualTimeManager().
-                getManageTasks().
+        this.actualTimeManager = timeManager;
+        timeManager.getManageTasks().
                 forEach(window::addOrRefreshTask);
     }
 
-    private void refreshComputerWorkDuration() {
-        CommonValidator.throwIfNull(getModel().getComputerWorkDuration(), "computerWorkDuration");
+    public void refreshComputerWorkDuration(Duration computerWorkDuration) {
+        CommonValidator.throwIfNull(computerWorkDuration, "computerWorkDuration");
 
-        window.refreshComputerWorkDuration(getModel().getComputerWorkDuration());
+        this.computerWorkDuration = computerWorkDuration;
+        window.refreshComputerWorkDuration(computerWorkDuration);
     }
 }

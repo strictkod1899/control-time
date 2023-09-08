@@ -7,7 +7,7 @@ import ru.strict.controltime.common.task.boundary.usecase.TaskEventUseCase;
 import ru.strict.event.EventListener;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskEventListener implements EventListener<TaskEvent> {
+public class TaskEventListener implements EventListener {
 
     TaskEventUseCase taskEventUseCase;
 
@@ -19,7 +19,7 @@ public class TaskEventListener implements EventListener<TaskEvent> {
     }
 
     @Override
-    public void processEvent(TaskEvent event) {
-        taskEventUseCase.processEvent(event);
+    public void processEvent(Object event) {
+        taskEventUseCase.processEvent((TaskEvent)event);
     }
 }

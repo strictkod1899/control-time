@@ -18,8 +18,8 @@ import ru.strict.controltime.view.manager.presenter.SettingsPresenterImpl;
 import ru.strict.controltime.view.manager.scheduler.ComputerWorkDurationScheduler;
 import ru.strict.controltime.view.manager.scheduler.RefreshTimeManagerScheduler;
 import ru.strict.controltime.view.notification.NotificationViewController;
-import ru.strict.controltime.view.settings.SettingsViewController;
-import ru.strict.controltime.view.settings.gateway.TaskGatewayImpl;
+import ru.strict.controltime.view.settings.main.SettingsViewController;
+import ru.strict.controltime.view.settings.main.gateway.TaskGatewayImpl;
 import ru.strict.event.EventBus;
 import ru.strict.file.json.JacksonObjectMapper;
 import ru.strict.ioc.InstanceType;
@@ -38,8 +38,10 @@ public class IoC extends SingletonIoC {
     @Override
     protected void configure() {
         addSingleton("appPath", String.class, () -> ClassUtil.getPathByClass(Main.class));
+        addSingleton("taskEventTopic", "topic");
         addComponent(JacksonObjectMapper.class);
         addComponent("taskEventBus", EventBus.class);
+        addComponent("viewEventBus", EventBus.class);
 
         addComponent(EnvRegistryInit.class, InstanceType.CONFIGURATION);
         addComponent(RepositoriesInit.class, InstanceType.CONFIGURATION);

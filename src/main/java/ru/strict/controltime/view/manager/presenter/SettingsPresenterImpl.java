@@ -2,8 +2,8 @@ package ru.strict.controltime.view.manager.presenter;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import ru.strict.controltime.view.settings.SettingsViewController;
-import ru.strict.controltime.view.settings.gateway.TaskGateway;
+import ru.strict.controltime.view.settings.main.SettingsViewController;
+import ru.strict.controltime.view.settings.main.gateway.TaskGateway;
 import ru.strict.validate.CommonValidator;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

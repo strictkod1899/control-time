@@ -2,48 +2,43 @@ package ru.strict.controltime.view.notification;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import ru.strict.controltime.task.domain.entity.task.Task;
 import ru.strict.validate.CommonValidator;
-import ru.strict.view.boundary.BaseView;
-import ru.strict.view.swing.NotificationWindow;
-
-import javax.annotation.Nonnull;
+import ru.strict.view.notification.NotificationListener;
+import ru.strict.view.notification.NotificationWindow;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class NotificationView extends BaseView<NotificationViewState, NotificationViewModel> {
-    public NotificationView(@Nonnull NotificationViewModel model) {
-        super(model);
+public class NotificationView {
+
+    NotificationWindow window;
+
+    NotificationViewController.NotificationListener notificationListener;
+    Task task;
+
+    public NotificationView(Task task, NotificationViewController.NotificationListener notificationListener) {
+        CommonValidator.throwIfNull(task, "task");
+        CommonValidator.throwIfNull(notificationListener, "notificationListener");
+
+        this.notificationListener = notificationListener;
+        this.task = task;
+
+        var notificationParams = NotificationWindow.Params.createDefault(false);
+        var notificationListenerWrapper = new NotificationListenerWrapper();
+        this.window = new NotificationWindow(task.getMessage().toString(),
+                notificationParams,
+                notificationListenerWrapper);
     }
 
-    @Override
-    public synchronized void refresh() {
-        switch (getModel().getState()) {
-            case showNotification:
-                showNotification();
-                break;
-            case none:
-                break;
-            default:
-                throw NotificationViewError.errUnsupportedViewState(getModel().getState());
+    public void show() {
+        this.window.show();
+    }
+
+    private class NotificationListenerWrapper implements NotificationListener {
+
+        @Override
+        public void close() {
+            window.hide();
+            notificationListener.close(task.getId());
         }
-    }
-
-    @Nonnull
-    @Override
-    protected Object getLockObject(@Nonnull NotificationViewState state) {
-        return this;
-    }
-
-    private void showNotification() {
-        CommonValidator.throwIfNull(getModel().getCurrentTaskForNotify(), "taskForNotify");
-
-        var task = getModel().getCurrentTaskForNotify();
-        var notificationWindow = new NotificationWindow(task.getMessage().toString());
-        notificationWindow.getParams().addCustomCloseButtonAction((e) -> {
-            getModel().removeActiveTaskNotification(task.getId());
-        });
-        notificationWindow.show();
-
-        getModel().addActiveTaskNotification(task.getId());
-        getModel().setCurrentTaskForNotify(null);
     }
 }
